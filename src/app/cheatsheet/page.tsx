@@ -1,8 +1,7 @@
 import { ColorSwatch } from '@/components/ColorSwatch';
 import { CopyButton } from '@/components/CopyButton';
-import type { Token, TokenCategory } from '@/types/token';
-
 import tokenData from '@/data/tokens.json';
+import type { Token, TokenCategory } from '@/types/token';
 
 const tokens = tokenData as Token[];
 
@@ -43,9 +42,7 @@ function CategorySection({ category, items }: { category: TokenCategory; items: 
     <section aria-label={CATEGORY_LABELS[category]}>
       <h2 className="sticky top-0 z-10 border-b border-nf-grey/50 bg-white/95 px-0 py-3 font-heading text-sm font-semibold uppercase tracking-wide text-nf-deep-navy backdrop-blur-sm">
         {CATEGORY_LABELS[category]}
-        <span className="ml-2 font-mono font-normal text-nf-muted-grey">
-          {items.length}
-        </span>
+        <span className="ml-2 font-mono font-normal text-nf-muted-grey">{items.length}</span>
       </h2>
       <div className="mt-2 grid grid-cols-1 gap-px sm:grid-cols-2 lg:grid-cols-3">
         {items.map((token) => (
@@ -55,15 +52,11 @@ function CategorySection({ category, items }: { category: TokenCategory; items: 
           >
             <CompactPreview token={token} />
             <div className="min-w-0 flex-1">
-              <p className="truncate font-mono text-xs text-nf-deep-navy">
-                {token.name}
-              </p>
+              <p className="truncate font-mono text-xs text-nf-deep-navy">{token.name}</p>
               <p className="truncate font-mono text-[10px] leading-[1.4] text-nf-muted-grey">
                 {token.lightValue}
                 {token.darkValue !== token.lightValue && (
-                  <span className="ml-1 text-nf-muted-grey/50">
-                    / {token.darkValue}
-                  </span>
+                  <span className="ml-1 text-nf-muted-grey/50">/ {token.darkValue}</span>
                 )}
               </p>
             </div>

@@ -1,9 +1,8 @@
 import Link from 'next/link';
 
 import { ColorSwatch } from '@/components/ColorSwatch';
-import type { Token } from '@/types/token';
-
 import tokenData from '@/data/tokens.json';
+import type { Token } from '@/types/token';
 
 const tokens = tokenData as Token[];
 
@@ -20,9 +19,7 @@ function getCategoryCount(category: string): number {
 }
 
 function getSampleColors(): Token[] {
-  return tokens
-    .filter((t) => t.category === 'color' && t.lightValue.startsWith('#'))
-    .slice(0, 5);
+  return tokens.filter((t) => t.category === 'color' && t.lightValue.startsWith('#')).slice(0, 5);
 }
 
 const sampleColors = getSampleColors();
@@ -32,7 +29,8 @@ const categories: CategoryCard[] = [
     label: 'Colors',
     href: '/colors',
     count: getCategoryCount('color'),
-    description: 'Palette scales, text, icon, border, and surface colors with light/dark theme values',
+    description:
+      'Palette scales, text, icon, border, and surface colors with light/dark theme values',
     preview: (
       <div className="flex gap-1.5">
         {sampleColors.map((t) => (
@@ -92,9 +90,11 @@ const categories: CategoryCard[] = [
     description: 'Elevation shadow tokens from subtle to prominent',
     preview: (
       <div className="flex gap-2">
-        {['0 1px 2px #0000000d', '0 4px 6px -1px #0000001a', '0 10px 15px -3px #0000001a'].map((s) => (
-          <div key={s} className="h-8 w-8 rounded bg-white" style={{ boxShadow: s }} />
-        ))}
+        {['0 1px 2px #0000000d', '0 4px 6px -1px #0000001a', '0 10px 15px -3px #0000001a'].map(
+          (s) => (
+            <div key={s} className="h-8 w-8 rounded bg-white" style={{ boxShadow: s }} />
+          ),
+        )}
       </div>
     ),
   },
@@ -105,8 +105,12 @@ const categories: CategoryCard[] = [
     description: 'WCAG AA/AAA contrast ratio checker for color token pairs',
     preview: (
       <div className="flex gap-1.5">
-        <span className="rounded bg-nf-deep-navy px-2 py-0.5 text-xs font-semibold text-nf-green">AA</span>
-        <span className="rounded bg-nf-deep-navy px-2 py-0.5 text-xs font-semibold text-yellow-400">AAA</span>
+        <span className="rounded bg-nf-deep-navy px-2 py-0.5 text-xs font-semibold text-nf-green">
+          AA
+        </span>
+        <span className="rounded bg-nf-deep-navy px-2 py-0.5 text-xs font-semibold text-yellow-400">
+          AAA
+        </span>
       </div>
     ),
   },
@@ -137,12 +141,8 @@ export default function Home() {
             <h2 className="font-heading text-lg text-nf-deep-navy group-hover:text-nf-dark-green">
               {cat.label}
             </h2>
-            <p className="mt-1 text-sm leading-[1.5] text-nf-muted-grey">
-              {cat.description}
-            </p>
-            <p className="mt-3 font-mono text-xs text-nf-muted-grey/70">
-              {cat.count} tokens
-            </p>
+            <p className="mt-1 text-sm leading-[1.5] text-nf-muted-grey">{cat.description}</p>
+            <p className="mt-3 font-mono text-xs text-nf-muted-grey/70">{cat.count} tokens</p>
           </Link>
         ))}
       </div>

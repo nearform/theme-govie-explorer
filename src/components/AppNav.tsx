@@ -19,10 +19,7 @@ export function AppNav() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <nav
-      className="relative bg-nf-deep-navy"
-      aria-label="Main navigation"
-    >
+    <nav className="relative bg-nf-deep-navy" aria-label="Main navigation">
       <div className="flex h-14 items-center justify-between px-4 md:px-8">
         <div className="flex items-center gap-6">
           <Link
@@ -61,9 +58,7 @@ export function AppNav() {
             aria-label="Search tokens (Cmd+K)"
           >
             Search tokens…
-            <kbd className="rounded bg-white/10 px-1.5 py-0.5 font-sans text-[11px]">
-              ⌘K
-            </kbd>
+            <kbd className="rounded bg-white/10 px-1.5 py-0.5 font-sans text-[11px]">⌘K</kbd>
           </button>
 
           <button

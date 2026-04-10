@@ -3,7 +3,6 @@
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-
 import { useTokenSearch } from '@/hooks/useTokenSearch';
 import { buildTokenPermalink, categoryToRoute } from '@/lib/tokenUrl';
 import type { Token } from '@/types/token';
@@ -54,7 +53,7 @@ export function CommandPalette({ tokens, isOpen, onClose }: CommandPaletteProps)
       onClose();
       router.push(permalink);
     },
-    [onClose, router]
+    [onClose, router],
   );
 
   const handleKeyDown = useCallback(
@@ -73,7 +72,7 @@ export function CommandPalette({ tokens, isOpen, onClose }: CommandPaletteProps)
         onClose();
       }
     },
-    [results, activeIndex, navigateToToken, onClose]
+    [results, activeIndex, navigateToToken, onClose],
   );
 
   useEffect(() => {
@@ -94,7 +93,10 @@ export function CommandPalette({ tokens, isOpen, onClose }: CommandPaletteProps)
       aria-modal="true"
       aria-label="Search tokens"
     >
-      <div className="fixed inset-0 bg-nf-deep-navy/60 motion-safe:animate-[fadeIn_150ms_ease-out]" aria-hidden="true" />
+      <div
+        className="fixed inset-0 bg-nf-deep-navy/60 motion-safe:animate-[fadeIn_150ms_ease-out]"
+        aria-hidden="true"
+      />
 
       <div className="relative z-10 flex h-fit max-h-[60vh] w-full max-w-[640px] flex-col overflow-hidden rounded-xl bg-white shadow-2xl motion-safe:animate-[scaleIn_150ms_ease-out]">
         <div className="flex items-center border-b border-nf-grey px-4">
@@ -119,11 +121,7 @@ export function CommandPalette({ tokens, isOpen, onClose }: CommandPaletteProps)
             placeholder="Search tokens…"
             className="w-full bg-transparent px-3 py-3.5 font-mono text-sm text-nf-deep-navy placeholder:text-nf-muted-grey/50 focus:outline-none"
             aria-label="Search tokens"
-            aria-activedescendant={
-              results[activeIndex]
-                ? `palette-item-${activeIndex}`
-                : undefined
-            }
+            aria-activedescendant={results[activeIndex] ? `palette-item-${activeIndex}` : undefined}
           />
           <kbd className="shrink-0 rounded bg-nf-light-grey px-1.5 py-0.5 font-mono text-[11px] text-nf-muted-grey">
             esc
@@ -131,10 +129,7 @@ export function CommandPalette({ tokens, isOpen, onClose }: CommandPaletteProps)
         </div>
 
         {query.length >= 2 && (
-          <div
-            ref={listRef}
-            className="flex-1 overflow-y-auto"
-          >
+          <div ref={listRef} className="flex-1 overflow-y-auto">
             {results.length === 0 ? (
               <div className="px-4 py-8 text-center text-sm text-nf-muted-grey">
                 No tokens match &lsquo;{query}&rsquo;
@@ -146,9 +141,7 @@ export function CommandPalette({ tokens, isOpen, onClose }: CommandPaletteProps)
                   id={`palette-item-${i}`}
                   data-active={i === activeIndex || undefined}
                   className={`flex w-full items-center ${
-                    i === activeIndex
-                      ? 'bg-nf-light-green'
-                      : 'hover:bg-nf-light-grey'
+                    i === activeIndex ? 'bg-nf-light-green' : 'hover:bg-nf-light-grey'
                   }`}
                 >
                   <button
@@ -166,9 +159,7 @@ export function CommandPalette({ tokens, isOpen, onClose }: CommandPaletteProps)
                       <div className="flex gap-3 font-mono text-xs text-nf-muted-grey">
                         <span className="truncate">{token.lightValue}</span>
                         {token.darkValue !== token.lightValue && (
-                          <span className="truncate text-nf-muted-grey/50">
-                            {token.darkValue}
-                          </span>
+                          <span className="truncate text-nf-muted-grey/50">{token.darkValue}</span>
                         )}
                       </div>
                     </div>

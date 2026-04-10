@@ -1,12 +1,9 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-
-import type { Token } from '@/types/token';
-
-import { CommandPalette } from './CommandPalette';
-
 import tokenData from '@/data/tokens.json';
+import type { Token } from '@/types/token';
+import { CommandPalette } from './CommandPalette';
 
 const tokens = tokenData as Token[];
 

@@ -19,9 +19,7 @@ export function HighlightMatch({ text, query }: HighlightMatchProps) {
   return (
     <>
       {before}
-      <mark className="rounded-sm bg-nf-light-purple px-0.5 text-inherit">
-        {match}
-      </mark>
+      <mark className="rounded-sm bg-nf-light-purple px-0.5 text-inherit">{match}</mark>
       {after}
     </>
   );

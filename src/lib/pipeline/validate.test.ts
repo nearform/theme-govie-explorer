@@ -1,10 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
-import {
-  validateTokenCount,
-  validateCssStructure,
-  validatePackageAvailable,
-} from './validate';
+import { validateCssStructure, validatePackageAvailable, validateTokenCount } from './validate';
 
 describe('validateTokenCount', () => {
   it('returns valid for count within expected range', () => {

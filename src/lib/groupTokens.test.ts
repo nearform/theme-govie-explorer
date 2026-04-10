@@ -27,10 +27,7 @@ describe('groupColorTokens', () => {
   });
 
   it('groups neutral tokens', () => {
-    const tokens = [
-      makeToken('--gieds-color-neutral-100'),
-      makeToken('--gieds-color-gray-200'),
-    ];
+    const tokens = [makeToken('--gieds-color-neutral-100'), makeToken('--gieds-color-gray-200')];
     const groups = groupColorTokens(tokens);
     expect(groups).toHaveLength(1);
     expect(groups[0].label).toBe('Neutral');
@@ -65,11 +62,7 @@ describe('groupColorTokens', () => {
       makeToken('--gieds-color-border-primary'),
     ];
     const groups = groupColorTokens(tokens);
-    expect(groups.map((g) => g.label)).toEqual([
-      'Text',
-      'Icon',
-      'Border Color',
-    ]);
+    expect(groups.map((g) => g.label)).toEqual(['Text', 'Icon', 'Border Color']);
   });
 
   it('puts surface tokens in Surface group', () => {
@@ -100,19 +93,11 @@ describe('groupColorTokens', () => {
   });
 
   it('groups all palette scales correctly', () => {
-    const scales = [
-      'blue',
-      'red',
-      'yellow',
-      'green',
-      'emerald',
-      'purple',
-      'gold',
-    ];
+    const scales = ['blue', 'red', 'yellow', 'green', 'emerald', 'purple', 'gold'];
     const tokens = scales.map((s) => makeToken(`--gieds-color-${s}-500`));
     const groups = groupColorTokens(tokens);
     expect(groups.map((g) => g.label).sort()).toEqual(
-      ['Blue', 'Emerald', 'Gold', 'Green', 'Purple', 'Red', 'Yellow'].sort()
+      ['Blue', 'Emerald', 'Gold', 'Green', 'Purple', 'Red', 'Yellow'].sort(),
     );
   });
 

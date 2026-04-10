@@ -44,10 +44,7 @@ function CheckIcon({ className }: { className?: string }) {
   );
 }
 
-export function PermalinkButton({
-  category,
-  tokenName,
-}: PermalinkButtonProps) {
+export function PermalinkButton({ category, tokenName }: PermalinkButtonProps) {
   const [state, setState] = useState<FeedbackState>('idle');
   const timerRef = useRef<ReturnType<typeof setTimeout>>(null);
 
@@ -67,13 +64,10 @@ export function PermalinkButton({
     }
   }, [category, tokenName]);
 
-  const ariaLabel =
-    state === 'copied' ? 'Link copied' : 'Copy permalink';
+  const ariaLabel = state === 'copied' ? 'Link copied' : 'Copy permalink';
 
   if (state === 'error') {
-    return (
-      <span className="text-sm text-red-500">Copy failed</span>
-    );
+    return <span className="text-sm text-red-500">Copy failed</span>;
   }
 
   return (

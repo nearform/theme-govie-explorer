@@ -16,11 +16,7 @@ function buildStyle(value: string, tokenName: string): React.CSSProperties {
   return { border: `${value} solid #478bff` };
 }
 
-export function BorderPreview({
-  value,
-  tokenName,
-  size,
-}: BorderPreviewProps) {
+export function BorderPreview({ value, tokenName, size }: BorderPreviewProps) {
   const style = buildStyle(value, tokenName);
   const dimension = size === 'small' ? 36 : 160;
 

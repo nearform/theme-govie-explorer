@@ -5,14 +5,10 @@ export interface TokenGroup {
   tokens: Token[];
 }
 
-export function groupByCategory(
-  tokens: Token[],
-  category: TokenCategory
-): TokenGroup[] {
+export function groupByCategory(tokens: Token[], category: TokenCategory): TokenGroup[] {
   const filtered = tokens.filter((t) => t.category === category);
   if (filtered.length === 0) return [];
-  const label =
-    category.charAt(0).toUpperCase() + category.slice(1);
+  const label = category.charAt(0).toUpperCase() + category.slice(1);
   return [{ label: `All ${label}`, tokens: filtered }];
 }
 

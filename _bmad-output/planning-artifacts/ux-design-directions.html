@@ -680,7 +680,7 @@ body { font-family: 'Inter', sans-serif; background: #f0f0f0; color: var(--nf-de
 
 <script>
 document.querySelectorAll('.showcase-nav a').forEach(link => {
-  link.addEventListener('click', function(e) {
+  link.addEventListener('click', function(_e) {
     document.querySelectorAll('.showcase-nav a').forEach(a => a.classList.remove('active'));
     this.classList.add('active');
   });

@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import type { Token, ColorToken, ContrastPair, TokenCategory } from '@/types/token';
+import { describe, expect, it } from 'vitest';
+import type { ColorToken, ContrastPair, Token, TokenCategory } from '@/types/token';
 
 describe('Token type definitions', () => {
   it('should allow creating a valid Token', () => {

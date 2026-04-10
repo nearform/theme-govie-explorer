@@ -1,12 +1,12 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import type { Token } from '@/types/token';
 
 import {
-  relativeLuminance,
-  contrastRatio,
   checkContrast,
   computeContrastPairs,
+  contrastRatio,
+  relativeLuminance,
   WCAG_AA_THRESHOLD,
   WCAG_AAA_THRESHOLD,
 } from './wcag';
@@ -120,22 +120,19 @@ describe('computeContrastPairs', () => {
   });
 
   it('computes pairs for resolvable color tokens', () => {
-    const tokens: Token[] = [
-      makeToken('--a', '#000000'),
-      makeToken('--b', '#ffffff'),
-    ];
+    const tokens: Token[] = [makeToken('--a', '#000000'), makeToken('--b', '#ffffff')];
 
     const pairMap = computeContrastPairs(tokens);
     expect(pairMap.size).toBe(2);
 
-    const aPairs = pairMap.get('--a')!;
+    const aPairs = pairMap.get('--a') ?? [];
     expect(aPairs).toHaveLength(1);
     expect(aPairs[0].against).toBe('--b');
     expect(aPairs[0].ratio).toBe(21);
     expect(aPairs[0].meetsAA).toBe(true);
     expect(aPairs[0].meetsAAA).toBe(true);
 
-    const bPairs = pairMap.get('--b')!;
+    const bPairs = pairMap.get('--b') ?? [];
     expect(bPairs).toHaveLength(1);
     expect(bPairs[0].against).toBe('--a');
     expect(bPairs[0].ratio).toBe(21);
@@ -156,7 +153,13 @@ describe('computeContrastPairs', () => {
   it('skips non-color category tokens', () => {
     const tokens: Token[] = [
       makeToken('--a', '#000000'),
-      { name: '--border', category: 'border', lightValue: '1px', darkValue: '1px', rawProperty: '--border' },
+      {
+        name: '--border',
+        category: 'border',
+        lightValue: '1px',
+        darkValue: '1px',
+        rawProperty: '--border',
+      },
       makeToken('--c', '#ffffff'),
     ];
 
@@ -182,7 +185,13 @@ describe('computeContrastPairs', () => {
 
   it('returns empty map for zero resolvable color tokens', () => {
     const tokens: Token[] = [
-      { name: '--a', category: 'color', lightValue: 'var(--ref)', darkValue: 'var(--ref)', rawProperty: '--a' },
+      {
+        name: '--a',
+        category: 'color',
+        lightValue: 'var(--ref)',
+        darkValue: 'var(--ref)',
+        rawProperty: '--a',
+      },
     ];
 
     const pairMap = computeContrastPairs(tokens);
@@ -196,7 +205,7 @@ describe('computeContrastPairs', () => {
     ];
 
     const pairMap = computeContrastPairs(tokens);
-    const aPairs = pairMap.get('--a')!;
+    const aPairs = pairMap.get('--a') ?? [];
     expect(aPairs[0].ratio).toBe(21);
   });
 
@@ -207,7 +216,7 @@ describe('computeContrastPairs', () => {
     ];
 
     const pairMap = computeContrastPairs(tokens);
-    const aPairs = pairMap.get('--a')!;
+    const aPairs = pairMap.get('--a') ?? [];
     expect(aPairs[0].ratio).toBe(21);
   });
 });
@@ -228,12 +237,10 @@ describe('integration with actual theme-govie tokens', () => {
     expect(whiteEntry).toBeDefined();
     expect(blackEntry).toBeDefined();
 
-    const whiteVsBlack = whiteEntry!.find(
-      (p) => p.against === '--gieds-color-neutral-black'
-    );
+    const whiteVsBlack = whiteEntry?.find((p) => p.against === '--gieds-color-neutral-black');
     expect(whiteVsBlack).toBeDefined();
-    expect(whiteVsBlack!.ratio).toBe(21);
-    expect(whiteVsBlack!.meetsAA).toBe(true);
-    expect(whiteVsBlack!.meetsAAA).toBe(true);
+    expect(whiteVsBlack?.ratio).toBe(21);
+    expect(whiteVsBlack?.meetsAA).toBe(true);
+    expect(whiteVsBlack?.meetsAAA).toBe(true);
   });
 });

@@ -20,10 +20,7 @@ export function findSemanticPairing(bgName: string, fgNames: string[]): string |
   return null;
 }
 
-export function filterPairs(
-  pairs: ContrastPair[],
-  filter: ContrastFilter
-): ContrastPair[] {
+export function filterPairs(pairs: ContrastPair[], filter: ContrastFilter): ContrastPair[] {
   switch (filter) {
     case 'all':
       return pairs;

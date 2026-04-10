@@ -63,11 +63,7 @@ function CheckIcon({ className }: { className?: string }) {
 
 type FeedbackState = 'idle' | 'copied' | 'error';
 
-export function CopyButton({
-  value,
-  variant = 'primary',
-  label,
-}: CopyButtonProps) {
+export function CopyButton({ value, variant = 'primary', label }: CopyButtonProps) {
   const [state, setState] = useState<FeedbackState>('idle');
   const timerRef = useRef<ReturnType<typeof setTimeout>>(null);
 
@@ -88,11 +84,7 @@ export function CopyButton({
   const ariaLabel = state === 'copied' ? 'Copied' : 'Copy token value';
 
   if (state === 'error') {
-    return (
-      <span className={`${config.wrapper} text-sm text-red-500`}>
-        Copy failed
-      </span>
-    );
+    return <span className={`${config.wrapper} text-sm text-red-500`}>Copy failed</span>;
   }
 
   return (
@@ -108,7 +100,7 @@ export function CopyButton({
             <CheckIcon /> Copied
           </span>
         ) : (
-          label ?? `Copy var(${value.includes('var(') ? value.slice(4, -1) : value})`
+          (label ?? `Copy var(${value.includes('var(') ? value.slice(4, -1) : value})`)
         )
       ) : state === 'copied' ? (
         <CheckIcon className="h-4 w-4 text-nf-dark-green" />

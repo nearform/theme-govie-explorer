@@ -26,7 +26,7 @@ export function parseHex(hex: string): RGB | null {
 
 export function parseRgb(rgb: string): RGB | null {
   const match = rgb.match(
-    /^rgba?\(\s*(\d+(?:\.\d+)?)\s*[,\s]\s*(\d+(?:\.\d+)?)\s*[,\s]\s*(\d+(?:\.\d+)?)/
+    /^rgba?\(\s*(\d+(?:\.\d+)?)\s*[,\s]\s*(\d+(?:\.\d+)?)\s*[,\s]\s*(\d+(?:\.\d+)?)/,
   );
   if (!match) return null;
 
@@ -48,7 +48,7 @@ function hueToRgb(p: number, q: number, t: number): number {
 
 export function parseHsl(hsl: string): RGB | null {
   const match = hsl.match(
-    /^hsla?\(\s*(\d+(?:\.\d+)?)\s*[,\s]\s*(\d+(?:\.\d+)?)%\s*[,\s]\s*(\d+(?:\.\d+)?)%/
+    /^hsla?\(\s*(\d+(?:\.\d+)?)\s*[,\s]\s*(\d+(?:\.\d+)?)%\s*[,\s]\s*(\d+(?:\.\d+)?)%/,
   );
   if (!match) return null;
 

@@ -12,11 +12,7 @@ interface BackgroundPickerProps {
   onSelect: (token: Token) => void;
 }
 
-export function BackgroundPicker({
-  tokens,
-  selected,
-  onSelect,
-}: BackgroundPickerProps) {
+export function BackgroundPicker({ tokens, selected, onSelect }: BackgroundPickerProps) {
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
 
@@ -53,11 +49,7 @@ export function BackgroundPicker({
               setIsOpen(true);
             }}
             onFocus={() => setIsOpen(true)}
-            placeholder={
-              selected
-                ? selected.name.replace(/^--/, '')
-                : 'Search background token…'
-            }
+            placeholder={selected ? selected.name.replace(/^--/, '') : 'Search background token…'}
             className="w-full rounded-lg border border-nf-grey bg-white px-3 py-2.5 font-mono text-sm text-nf-deep-navy placeholder:text-nf-muted-grey/50 focus:border-nf-green focus:outline-none focus-visible:ring-2 focus-visible:ring-nf-green focus-visible:ring-offset-2"
             aria-label="Search background token"
           />

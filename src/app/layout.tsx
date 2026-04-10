@@ -1,27 +1,26 @@
-import type { Metadata } from "next";
-import { Bitter, Inter } from "next/font/google";
+import type { Metadata } from 'next';
+import { Bitter, Inter } from 'next/font/google';
 
-import { AppNav } from "@/components/AppNav";
-import { CommandPaletteProvider } from "@/components/CommandPaletteProvider";
+import { AppNav } from '@/components/AppNav';
+import { CommandPaletteProvider } from '@/components/CommandPaletteProvider';
 
-import "./globals.css";
+import './globals.css';
 
 const bitter = Bitter({
-  subsets: ["latin"],
-  variable: "--font-bitter",
-  display: "swap",
+  subsets: ['latin'],
+  variable: '--font-bitter',
+  display: 'swap',
 });
 
 const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
-  title: "Gov.ie Design Token Explorer",
-  description:
-    "Browse, search, and inspect Gov.ie design tokens with WCAG contrast checking",
+  title: 'Gov.ie Design Token Explorer',
+  description: 'Browse, search, and inspect Gov.ie design tokens with WCAG contrast checking',
 };
 
 export default function RootLayout({

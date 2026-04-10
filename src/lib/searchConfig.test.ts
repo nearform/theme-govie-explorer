@@ -35,10 +35,7 @@ describe('Fuse.js search', () => {
     const results = fuse.search('#ffffff', { limit: MAX_RESULTS });
     expect(results.length).toBeGreaterThan(0);
     expect(
-      results.some(
-        (r) =>
-          r.item.lightValue === '#ffffff' || r.item.darkValue === '#ffffff'
-      )
+      results.some((r) => r.item.lightValue === '#ffffff' || r.item.darkValue === '#ffffff'),
     ).toBe(true);
   });
 
@@ -47,9 +44,7 @@ describe('Fuse.js search', () => {
     const fuse = new Fuse(tokens, SEARCH_OPTIONS);
     const results = fuse.search('16px', { limit: MAX_RESULTS });
     expect(results.length).toBeGreaterThan(0);
-    expect(
-      results.some((r) => r.item.lightValue.includes('16px'))
-    ).toBe(true);
+    expect(results.some((r) => r.item.lightValue.includes('16px'))).toBe(true);
   });
 
   it('returns at most MAX_RESULTS', async () => {
@@ -65,9 +60,7 @@ describe('Fuse.js search', () => {
     const results = fuse.search('primary-500', { limit: MAX_RESULTS });
     expect(results.length).toBeGreaterThanOrEqual(2);
     for (let i = 1; i < results.length; i++) {
-      expect(results[i].score).toBeGreaterThanOrEqual(
-        results[i - 1].score ?? 0
-      );
+      expect(results[i].score).toBeGreaterThanOrEqual(results[i - 1].score ?? 0);
     }
   });
 

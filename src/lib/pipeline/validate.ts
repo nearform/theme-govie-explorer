@@ -1,4 +1,4 @@
-import { createRequire } from 'module';
+import { createRequire } from 'node:module';
 
 const MIN_EXPECTED_TOKENS = 500;
 const MAX_EXPECTED_TOKENS = 800;
@@ -27,10 +27,7 @@ export function validateTokenCount(count: number): ValidationResult {
   return { valid: true };
 }
 
-export function validateCssStructure(
-  lightCss: string,
-  darkCss: string
-): ValidationResult {
+export function validateCssStructure(lightCss: string, darkCss: string): ValidationResult {
   if (!lightCss.trim()) {
     return { valid: false, error: 'light.css is empty or could not be read.' };
   }

@@ -10,11 +10,7 @@ function linearize(channel: number): number {
 }
 
 export function relativeLuminance(rgb: RGB): number {
-  return (
-    0.2126 * linearize(rgb.r) +
-    0.7152 * linearize(rgb.g) +
-    0.0722 * linearize(rgb.b)
-  );
+  return 0.2126 * linearize(rgb.r) + 0.7152 * linearize(rgb.g) + 0.0722 * linearize(rgb.b);
 }
 
 export function contrastRatio(l1: number, l2: number): number {
@@ -25,7 +21,7 @@ export function contrastRatio(l1: number, l2: number): number {
 
 export function checkContrast(
   color1: RGB,
-  color2: RGB
+  color2: RGB,
 ): { ratio: number; meetsAA: boolean; meetsAAA: boolean } {
   const l1 = relativeLuminance(color1);
   const l2 = relativeLuminance(color2);
@@ -42,9 +38,7 @@ function parseColor(value: string): RGB | null {
   return parseHex(value) ?? parseRgb(value) ?? parseHsl(value);
 }
 
-export function computeContrastPairs(
-  tokens: Token[]
-): Map<string, ContrastPair[]> {
+export function computeContrastPairs(tokens: Token[]): Map<string, ContrastPair[]> {
   const colorTokens = tokens.filter((t) => t.category === 'color');
 
   const resolved: Array<{ name: string; rgb: RGB }> = [];

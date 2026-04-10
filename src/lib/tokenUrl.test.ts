@@ -1,11 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-  addPrefix,
-  buildTokenPermalink,
-  getTokenFromSearchParams,
-  stripPrefix,
-} from './tokenUrl';
+import { addPrefix, buildTokenPermalink, getTokenFromSearchParams, stripPrefix } from './tokenUrl';
 
 describe('stripPrefix', () => {
   it('removes leading -- from token names', () => {

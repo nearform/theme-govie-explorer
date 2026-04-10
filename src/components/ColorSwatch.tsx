@@ -14,12 +14,7 @@ interface ColorSwatchProps {
   className?: string;
 }
 
-export function ColorSwatch({
-  lightValue,
-  darkValue,
-  size,
-  className = '',
-}: ColorSwatchProps) {
+export function ColorSwatch({ lightValue, darkValue, size, className = '' }: ColorSwatchProps) {
   const { dimension, radius } = SIZE_CONFIG[size];
 
   return (
@@ -28,14 +23,8 @@ export function ColorSwatch({
       style={{ width: dimension, height: dimension }}
       aria-hidden="true"
     >
-      <div
-        className="absolute inset-y-0 left-0 w-1/2"
-        style={{ backgroundColor: lightValue }}
-      />
-      <div
-        className="absolute inset-y-0 right-0 w-1/2"
-        style={{ backgroundColor: darkValue }}
-      />
+      <div className="absolute inset-y-0 left-0 w-1/2" style={{ backgroundColor: lightValue }} />
+      <div className="absolute inset-y-0 right-0 w-1/2" style={{ backgroundColor: darkValue }} />
       <div className="absolute inset-y-0 left-1/2 w-px bg-white" />
     </div>
   );

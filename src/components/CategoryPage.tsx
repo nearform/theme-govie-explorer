@@ -28,15 +28,9 @@ export function CategoryPage({ category, groups }: CategoryPageProps) {
   const [filter, setFilter] = useState('');
   const [showMobileDetail, setShowMobileDetail] = useState(false);
 
-  const allTokens = useMemo(
-    () => groups.flatMap((g) => g.tokens),
-    [groups]
-  );
+  const allTokens = useMemo(() => groups.flatMap((g) => g.tokens), [groups]);
 
-  const permalinkToken = useMemo(
-    () => getTokenFromSearchParams(searchParams),
-    [searchParams]
-  );
+  const permalinkToken = useMemo(() => getTokenFromSearchParams(searchParams), [searchParams]);
 
   useEffect(() => {
     if (!permalinkToken) return;
@@ -62,17 +56,12 @@ export function CategoryPage({ category, groups }: CategoryPageProps) {
     return groups
       .map((group) => ({
         ...group,
-        tokens: group.tokens.filter((t) =>
-          t.name.toLowerCase().includes(lowerFilter)
-        ),
+        tokens: group.tokens.filter((t) => t.name.toLowerCase().includes(lowerFilter)),
       }))
       .filter((group) => group.tokens.length > 0);
   }, [groups, filter]);
 
-  const totalFiltered = filteredGroups.reduce(
-    (sum, g) => sum + g.tokens.length,
-    0
-  );
+  const totalFiltered = filteredGroups.reduce((sum, g) => sum + g.tokens.length, 0);
 
   return (
     <SplitPanel
@@ -80,11 +69,7 @@ export function CategoryPage({ category, groups }: CategoryPageProps) {
       onCloseDetail={handleCloseDetail}
       list={
         <div className="flex h-full flex-col">
-          <FilterInput
-            value={filter}
-            onChange={setFilter}
-            placeholder={`Filter ${category}…`}
-          />
+          <FilterInput value={filter} onChange={setFilter} placeholder={`Filter ${category}…`} />
           {totalFiltered === 0 && filter ? (
             <div className="flex flex-1 flex-col items-center justify-center p-6 text-center">
               <p className="text-sm text-nf-muted-grey">
@@ -99,10 +84,7 @@ export function CategoryPage({ category, groups }: CategoryPageProps) {
               </button>
             </div>
           ) : (
-            <nav
-              aria-label={`${category} tokens`}
-              className="flex-1 overflow-y-auto"
-            >
+            <nav aria-label={`${category} tokens`} className="flex-1 overflow-y-auto">
               {filteredGroups.map((group) => (
                 <section key={group.label} aria-label={group.label}>
                   <h3 className="sticky top-0 z-10 border-b border-nf-grey/50 bg-white/95 px-4 py-2 font-heading text-xs font-semibold uppercase tracking-wide text-nf-muted-grey backdrop-blur-sm">

@@ -7,16 +7,11 @@ import { BackgroundPicker } from '@/components/BackgroundPicker';
 import { ContrastCell } from '@/components/ContrastCell';
 import { EmptyState } from '@/components/EmptyState';
 import { PairPopover } from '@/components/PairPopover';
-import type { ContrastFilter } from '@/lib/contrastUtils';
-import {
-  filterPairs,
-  findSemanticPairing,
-  getColorTokenMap,
-} from '@/lib/contrastUtils';
-import type { ContrastPair, Token } from '@/types/token';
-
 import contrastData from '@/data/contrastMatrix.json';
 import tokenData from '@/data/tokens.json';
+import type { ContrastFilter } from '@/lib/contrastUtils';
+import { filterPairs, findSemanticPairing, getColorTokenMap } from '@/lib/contrastUtils';
+import type { ContrastPair, Token } from '@/types/token';
 
 const contrastMatrix = contrastData as Record<string, ContrastPair[]>;
 const allTokens = tokenData as Token[];
@@ -58,25 +53,19 @@ export function ContrastContent() {
     return contrastMatrix[bgToken.name] ?? [];
   }, [bgToken]);
 
-  const filteredPairs = useMemo(
-    () => filterPairs(pairs, filter),
-    [pairs, filter]
-  );
+  const filteredPairs = useMemo(() => filterPairs(pairs, filter), [pairs, filter]);
 
   const semanticFg = useMemo(() => {
     if (!bgToken) return null;
     return findSemanticPairing(
       bgToken.name,
-      pairs.map((p) => p.against)
+      pairs.map((p) => p.against),
     );
   }, [bgToken, pairs]);
 
-  const handleCellClick = useCallback(
-    (fgName: string, pair: ContrastPair) => {
-      setPopover({ fgName, pair });
-    },
-    []
-  );
+  const handleCellClick = useCallback((fgName: string, pair: ContrastPair) => {
+    setPopover({ fgName, pair });
+  }, []);
 
   const handleSelectBg = useCallback((token: Token) => {
     setBgToken(token);
@@ -90,16 +79,11 @@ export function ContrastContent() {
         Contrast Checker
       </h1>
       <p className="mt-1 text-base text-nf-muted-grey">
-        Select a background token to check WCAG contrast against all color
-        tokens.
+        Select a background token to check WCAG contrast against all color tokens.
       </p>
 
       <div className="mt-6 max-w-md">
-        <BackgroundPicker
-          tokens={colorTokens}
-          selected={bgToken}
-          onSelect={handleSelectBg}
-        />
+        <BackgroundPicker tokens={colorTokens} selected={bgToken} onSelect={handleSelectBg} />
       </div>
 
       {!bgToken ? (

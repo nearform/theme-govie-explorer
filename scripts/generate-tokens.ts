@@ -1,7 +1,7 @@
-import { readFileSync, mkdirSync, writeFileSync } from 'fs';
-import { createRequire } from 'module';
-import { dirname, join } from 'path';
-import { fileURLToPath } from 'url';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { categorize } from '@/lib/pipeline/categorize';
 import { parseCss } from '@/lib/pipeline/parseCss';
@@ -68,17 +68,11 @@ function run(): void {
   for (const pairs of contrastPairMap.values()) {
     totalPairs += pairs.length;
   }
-  console.log(
-    `  ✓ Computed ${totalPairs} contrast pairs for ${contrastPairMap.size} color tokens`
-  );
+  console.log(`  ✓ Computed ${totalPairs} contrast pairs for ${contrastPairMap.size} color tokens`);
 
   mkdirSync(DATA_DIR, { recursive: true });
 
-  writeFileSync(
-    join(DATA_DIR, 'tokens.json'),
-    JSON.stringify(tokens, null, 2),
-    'utf8'
-  );
+  writeFileSync(join(DATA_DIR, 'tokens.json'), JSON.stringify(tokens, null, 2), 'utf8');
 
   const contrastMatrixObj: Record<string, unknown> = {};
   for (const [name, pairs] of contrastPairMap) {
@@ -87,16 +81,14 @@ function run(): void {
   writeFileSync(
     join(DATA_DIR, 'contrastMatrix.json'),
     JSON.stringify(contrastMatrixObj, null, 2),
-    'utf8'
+    'utf8',
   );
 
   const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
 
   console.log(`\n✅ Pipeline complete in ${elapsed}s`);
   console.log(`   → src/data/tokens.json (${tokens.length} tokens)`);
-  console.log(
-    `   → src/data/contrastMatrix.json (${contrastPairMap.size} entries)`
-  );
+  console.log(`   → src/data/contrastMatrix.json (${contrastPairMap.size} entries)`);
 }
 
 run();

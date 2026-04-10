@@ -21,17 +21,12 @@ export function addPrefix(name: string): string {
   return name.startsWith('--') ? name : `--${name}`;
 }
 
-export function buildTokenPermalink(
-  category: string,
-  tokenName: string
-): string {
+export function buildTokenPermalink(category: string, tokenName: string): string {
   const stripped = stripPrefix(tokenName);
   return `/${category}?token=${encodeURIComponent(stripped)}`;
 }
 
-export function getTokenFromSearchParams(
-  searchParams: URLSearchParams
-): string | null {
+export function getTokenFromSearchParams(searchParams: URLSearchParams): string | null {
   const raw = searchParams.get('token');
   if (!raw) return null;
   return addPrefix(decodeURIComponent(raw));

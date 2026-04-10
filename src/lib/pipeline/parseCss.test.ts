@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { parseCss, type RawToken } from './parseCss';
 
@@ -60,15 +60,15 @@ describe('parseCss', () => {
   it('resolves var() references to concrete values', () => {
     const surface = tokens.find((t) => t.name === '--gieds-surface-primary-default');
     expect(surface).toBeDefined();
-    expect(surface!.lightValue).not.toMatch(/^var\(/);
-    expect(surface!.lightValue).toMatch(/^#[0-9a-fA-F]+$/);
+    expect(surface?.lightValue).not.toMatch(/^var\(/);
+    expect(surface?.lightValue).toMatch(/^#[0-9a-fA-F]+$/);
   });
 
   it('correctly parses hex color values', () => {
     const white = tokens.find((t) => t.name === '--gieds-color-neutral-white');
     expect(white).toBeDefined();
-    expect(white!.lightValue).toBe('#ffffff');
-    expect(white!.darkValue).toBe('#ffffff');
+    expect(white?.lightValue).toBe('#ffffff');
+    expect(white?.darkValue).toBe('#ffffff');
   });
 
   it('produces no duplicate token names', () => {
@@ -80,7 +80,7 @@ describe('parseCss', () => {
   it('handles tokens present in both themes', () => {
     const token = tokens.find((t) => t.name === '--gieds-border-width-100');
     expect(token).toBeDefined();
-    expect(token!.lightValue).toBe('1px');
-    expect(token!.darkValue).toBe('1px');
+    expect(token?.lightValue).toBe('1px');
+    expect(token?.darkValue).toBe('1px');
   });
 });

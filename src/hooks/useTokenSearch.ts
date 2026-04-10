@@ -12,19 +12,14 @@ export interface SearchResult {
 export function useTokenSearch(tokens: Token[]) {
   const [query, setQuery] = useState('');
 
-  const fuse = useMemo(
-    () => new Fuse(tokens, SEARCH_OPTIONS),
-    [tokens]
-  );
+  const fuse = useMemo(() => new Fuse(tokens, SEARCH_OPTIONS), [tokens]);
 
   const results: SearchResult[] = useMemo(() => {
     if (!query || query.length < 2) return [];
-    return fuse
-      .search(query, { limit: MAX_RESULTS })
-      .map((r) => ({
-        token: r.item,
-        score: r.score ?? 1,
-      }));
+    return fuse.search(query, { limit: MAX_RESULTS }).map((r) => ({
+      token: r.item,
+      score: r.score ?? 1,
+    }));
   }, [fuse, query]);
 
   return { query, setQuery, results };

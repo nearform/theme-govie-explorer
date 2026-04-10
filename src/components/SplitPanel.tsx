@@ -5,12 +5,7 @@ interface SplitPanelProps {
   onCloseDetail?: () => void;
 }
 
-export function SplitPanel({
-  list,
-  detail,
-  showDetail = false,
-  onCloseDetail,
-}: SplitPanelProps) {
+export function SplitPanel({ list, detail, showDetail = false, onCloseDetail }: SplitPanelProps) {
   return (
     <>
       {/* Desktop: side-by-side */}
@@ -25,9 +20,7 @@ export function SplitPanel({
 
       {/* Tablet: stacked */}
       <div className="hidden h-[calc(100vh-56px)] flex-col md:flex lg:hidden">
-        <div className="flex h-1/2 shrink-0 flex-col border-b border-nf-grey bg-white">
-          {list}
-        </div>
+        <div className="flex h-1/2 shrink-0 flex-col border-b border-nf-grey bg-white">{list}</div>
         <div className="flex-1 overflow-y-auto bg-nf-light-grey" aria-live="polite">
           {detail}
         </div>
@@ -35,9 +28,7 @@ export function SplitPanel({
 
       {/* Mobile: list-only, detail as overlay */}
       <div className="flex h-[calc(100vh-56px)] flex-col md:hidden">
-        <div className={`flex-1 flex-col bg-white ${showDetail ? 'hidden' : 'flex'}`}>
-          {list}
-        </div>
+        <div className={`flex-1 flex-col bg-white ${showDetail ? 'hidden' : 'flex'}`}>{list}</div>
         {showDetail && (
           <div className="flex flex-1 flex-col bg-nf-light-grey">
             <div className="flex items-center border-b border-nf-grey bg-white px-4 py-2">

@@ -45,10 +45,7 @@ export function ContrastCell({
         className="flex w-full flex-col items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-nf-green focus-visible:ring-offset-2"
         aria-label={`Contrast pair: ${fgName} on background, ratio ${ratio.toFixed(2)}:1`}
       >
-        <span
-          className="text-lg font-bold leading-tight"
-          style={{ color: fgValue }}
-        >
+        <span className="text-lg font-bold leading-tight" style={{ color: fgValue }}>
           Aa
         </span>
         <span className="font-mono text-xs" style={{ color: fgValue }}>

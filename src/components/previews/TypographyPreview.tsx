@@ -4,8 +4,7 @@ interface TypographyPreviewProps {
   size: 'small' | 'large';
 }
 
-const FONT_SHORTHAND_RE =
-  /^(\d+)\s+([\d.]+(?:rem|em|px))(?:\/([\d.]+(?:rem|em|px)?))?\s+(.+)$/;
+const FONT_SHORTHAND_RE = /^(\d+)\s+([\d.]+(?:rem|em|px))(?:\/([\d.]+(?:rem|em|px)?))?\s+(.+)$/;
 
 function parseFontShorthand(value: string): React.CSSProperties | null {
   const match = FONT_SHORTHAND_RE.exec(value);
@@ -43,19 +42,13 @@ function buildStyle(value: string, tokenName: string): React.CSSProperties {
   return style;
 }
 
-export function TypographyPreview({
-  value,
-  tokenName,
-  size,
-}: TypographyPreviewProps) {
+export function TypographyPreview({ value, tokenName, size }: TypographyPreviewProps) {
   const style = buildStyle(value, tokenName);
 
   if (size === 'small') {
     const smallStyle: React.CSSProperties = {
       ...style,
-      fontSize: style.fontSize
-        ? `clamp(12px, ${style.fontSize}, 24px)`
-        : '14px',
+      fontSize: style.fontSize ? `clamp(12px, ${style.fontSize}, 24px)` : '14px',
     };
 
     return (

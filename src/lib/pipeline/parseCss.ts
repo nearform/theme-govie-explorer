@@ -1,5 +1,5 @@
-import { readFileSync } from 'fs';
-import { createRequire } from 'module';
+import { readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 
 import postcss from 'postcss';
 
@@ -28,11 +28,7 @@ function resolveCssPath(subpath: string): string {
 
 const MAX_RESOLVE_DEPTH = 10;
 
-function resolveValue(
-  value: string,
-  props: Record<string, string>,
-  depth = 0
-): string {
+function resolveValue(value: string, props: Record<string, string>, depth = 0): string {
   if (depth > MAX_RESOLVE_DEPTH || !value.includes('var(')) return value;
 
   return value.replace(
@@ -47,7 +43,7 @@ function resolveValue(
         return resolveValue(fallback.trim(), props, depth + 1);
       }
       return _match;
-    }
+    },
   );
 }
 

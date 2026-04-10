@@ -25,21 +25,9 @@ export function TokenPreview({ token, size }: TokenPreviewProps) {
     case 'spacing':
       return <SpacingPreview value={token.lightValue} size={size} />;
     case 'typography':
-      return (
-        <TypographyPreview
-          value={token.lightValue}
-          tokenName={token.name}
-          size={size}
-        />
-      );
+      return <TypographyPreview value={token.lightValue} tokenName={token.name} size={size} />;
     case 'border':
-      return (
-        <BorderPreview
-          value={token.lightValue}
-          tokenName={token.name}
-          size={size}
-        />
-      );
+      return <BorderPreview value={token.lightValue} tokenName={token.name} size={size} />;
     case 'shadow':
       return <ShadowPreview value={token.lightValue} size={size} />;
     case 'other':

@@ -1,10 +1,4 @@
-export type TokenCategory =
-  | "color"
-  | "spacing"
-  | "typography"
-  | "border"
-  | "shadow"
-  | "other";
+export type TokenCategory = 'color' | 'spacing' | 'typography' | 'border' | 'shadow' | 'other';
 
 export interface Token {
   name: string;
@@ -15,7 +9,7 @@ export interface Token {
 }
 
 export interface ColorToken extends Token {
-  category: "color";
+  category: 'color';
   contrastPairs: ContrastPair[];
 }
 

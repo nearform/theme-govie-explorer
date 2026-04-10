@@ -1,12 +1,6 @@
 import { describe, expect, it } from 'vitest';
-
-import {
-  filterPairs,
-  findSemanticPairing,
-  getColorTokenMap,
-} from './contrastUtils';
-
 import type { ContrastPair, Token } from '@/types/token';
+import { filterPairs, findSemanticPairing, getColorTokenMap } from './contrastUtils';
 
 const makePair = (against: string, ratio: number): ContrastPair => ({
   against,
@@ -17,20 +11,15 @@ const makePair = (against: string, ratio: number): ContrastPair => ({
 
 describe('findSemanticPairing', () => {
   it('matches -bg with -text counterpart', () => {
-    const fgNames = [
-      '--gieds-color-warning-text',
-      '--gieds-color-primary-500',
-    ];
+    const fgNames = ['--gieds-color-warning-text', '--gieds-color-primary-500'];
     expect(findSemanticPairing('--gieds-color-warning-bg', fgNames)).toBe(
-      '--gieds-color-warning-text'
+      '--gieds-color-warning-text',
     );
   });
 
   it('matches -bg with -fg counterpart', () => {
     const fgNames = ['--gieds-color-info-fg', '--gieds-color-primary-500'];
-    expect(findSemanticPairing('--gieds-color-info-bg', fgNames)).toBe(
-      '--gieds-color-info-fg'
-    );
+    expect(findSemanticPairing('--gieds-color-info-bg', fgNames)).toBe('--gieds-color-info-fg');
   });
 
   it('returns null when no semantic pair exists', () => {
@@ -40,11 +29,7 @@ describe('findSemanticPairing', () => {
 });
 
 describe('filterPairs', () => {
-  const pairs: ContrastPair[] = [
-    makePair('--a', 8),
-    makePair('--b', 5),
-    makePair('--c', 2),
-  ];
+  const pairs: ContrastPair[] = [makePair('--a', 8), makePair('--b', 5), makePair('--c', 2)];
 
   it('returns all pairs for "all" filter', () => {
     expect(filterPairs(pairs, 'all')).toHaveLength(3);

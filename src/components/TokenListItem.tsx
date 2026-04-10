@@ -39,10 +39,7 @@ export function TokenListItem({
           </p>
         </div>
       </button>
-      <CopyButton
-        value={`var(${token.name})`}
-        variant="ghost"
-      />
+      <CopyButton value={`var(${token.name})`} variant="ghost" />
     </div>
   );
 }

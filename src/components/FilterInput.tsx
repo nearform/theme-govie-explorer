@@ -6,11 +6,7 @@ interface FilterInputProps {
   placeholder?: string;
 }
 
-export function FilterInput({
-  value,
-  onChange,
-  placeholder = 'Filter tokens…',
-}: FilterInputProps) {
+export function FilterInput({ value, onChange, placeholder = 'Filter tokens…' }: FilterInputProps) {
   return (
     <div className="relative">
       <input

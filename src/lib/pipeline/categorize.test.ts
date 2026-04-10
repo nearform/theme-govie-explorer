@@ -1,8 +1,7 @@
-import { describe, it, expect } from 'vitest';
-
+import { describe, expect, it } from 'vitest';
+import { categorize, categorizeToken } from './categorize';
 import type { RawToken } from './parseCss';
 import { parseCss } from './parseCss';
-import { categorize, categorizeToken } from './categorize';
 
 describe('categorizeToken', () => {
   it('classifies --gieds-color-* as color', () => {
@@ -87,7 +86,7 @@ describe('categorize (integration with parseCss)', () => {
 
     for (const token of tokens) {
       expect(['color', 'spacing', 'typography', 'border', 'shadow', 'other']).toContain(
-        token.category
+        token.category,
       );
     }
   });
