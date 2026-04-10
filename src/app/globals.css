@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+@theme {
+  --color-nf-deep-navy: #000e38;
+  --color-nf-green: #00e6a4;
+  --color-nf-dark-green: #07a06f;
+  --color-nf-light-green: #ccfaed;
+  --color-nf-purple: #9966ff;
+  --color-nf-light-purple: #dfccff;
+  --color-nf-blue: #478bff;
+  --color-nf-light-blue: #d6e6ff;
+  --color-nf-grey: #d9d9d9;
+  --color-nf-light-grey: #f4f8fa;
+  --color-nf-deep-grey: #444450;
+  --color-nf-muted-grey: #727783;
+
+  --font-heading: var(--font-bitter), serif;
+  --font-sans: var(--font-inter), sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: -0.01em;
+}
+
+@utility focus-ring {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--color-nf-green),
+    0 0 0 4px rgba(0, 14, 56, 0.2);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}

@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Token Explorer — Design Directions</title>
+<link href="https://fonts.googleapis.com/css2?family=Bitter:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --nf-deep-navy: #000e38;
+  --nf-navy: #0c3d5f;
+  --nf-light-navy: #526389;
+  --nf-green: #00e6a4;
+  --nf-dark-green: #07a06f;
+  --nf-light-green: #ccfaed;
+  --nf-purple: #9966ff;
+  --nf-light-purple: #dfccff;
+  --nf-blue: #478bff;
+  --nf-light-blue: #d6e6ff;
+  --nf-grey: #d9d9d9;
+  --nf-light-grey: #f4f8fa;
+  --nf-deep-grey: #444450;
+  --nf-muted-grey: #727783;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: #f0f0f0; color: var(--nf-deep-navy); }
+::selection { background: var(--nf-light-purple); color: var(--nf-deep-navy); }
+
+.showcase-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: var(--nf-deep-navy); padding: 12px 24px;
+  display: flex; align-items: center; gap: 12px;
+  font-size: 13px; color: white; overflow-x: auto;
+}
+.showcase-nav h1 { font-family: 'Bitter', serif; font-size: 15px; font-weight: 400; white-space: nowrap; margin-right: 12px; }
+.showcase-nav a {
+  color: rgba(255,255,255,0.6); text-decoration: none; padding: 6px 14px;
+  border-radius: 20px; white-space: nowrap; transition: all 0.2s;
+  border: 1px solid transparent;
+}
+.showcase-nav a:hover, .showcase-nav a.active { color: white; background: rgba(0,230,164,0.15); border-color: var(--nf-green); }
+
+.direction { min-height: 100vh; padding: 80px 0 60px; }
+.direction:nth-child(even) { background: #f7f7f7; }
+.direction:nth-child(odd) { background: white; }
+.direction-header {
+  text-align: center; padding: 40px 24px 32px; max-width: 800px; margin: 0 auto;
+}
+.direction-header h2 { font-family: 'Bitter', serif; font-size: 28px; font-weight: 400; margin-bottom: 8px; }
+.direction-header .tag {
+  display: inline-block; background: var(--nf-light-green); color: var(--nf-dark-green);
+  padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 500; margin-bottom: 16px;
+}
+.direction-header p { color: var(--nf-muted-grey); font-size: 15px; line-height: 1.6; }
+
+.mockup-frame {
+  max-width: 1280px; margin: 0 auto 40px; border-radius: 12px; overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,14,56,0.12); border: 1px solid var(--nf-grey);
+}
+
+/* Shared nav for all mockups */
+.mock-nav {
+  background: var(--nf-deep-navy); padding: 0 32px; height: 56px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.mock-nav-left { display: flex; align-items: center; gap: 24px; }
+.mock-nav-logo { font-family: 'Bitter', serif; color: white; font-size: 15px; }
+.mock-nav-logo span { color: var(--nf-green); }
+.mock-nav-links { display: flex; gap: 4px; }
+.mock-nav-links a {
+  color: rgba(255,255,255,0.65); text-decoration: none; padding: 6px 12px;
+  font-size: 13px; border-radius: 6px; transition: all 0.15s;
+}
+.mock-nav-links a:hover { color: white; background: rgba(255,255,255,0.08); }
+.mock-nav-links a.active { color: var(--nf-green); }
+.mock-nav-search {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+  padding: 6px 12px; border-radius: 8px; color: rgba(255,255,255,0.4); font-size: 13px;
+  cursor: pointer; transition: all 0.15s;
+}
+.mock-nav-search:hover { border-color: var(--nf-green); color: rgba(255,255,255,0.7); }
+.mock-nav-search kbd {
+  background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px;
+  font-size: 11px; font-family: inherit;
+}
+
+.mock-content { background: white; min-height: 480px; }
+
+/* ===== Direction A: Card Grid ===== */
+.dir-a .mock-content { padding: 40px 48px; }
+.dir-a .page-title { font-family: 'Bitter', serif; font-size: 28px; margin-bottom: 8px; }
+.dir-a .page-subtitle { color: var(--nf-muted-grey); font-size: 14px; margin-bottom: 40px; }
+.dir-a .group-label {
+  font-family: 'Bitter', serif; font-size: 18px; margin-bottom: 20px; padding-bottom: 12px;
+  border-bottom: 1px solid var(--nf-grey);
+}
+.dir-a .token-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 48px; }
+.dir-a .token-card {
+  background: var(--nf-light-grey); border-radius: 10px; padding: 20px; border: 1px solid transparent;
+  transition: all 0.15s; cursor: pointer;
+}
+.dir-a .token-card:hover { border-color: var(--nf-green); box-shadow: 0 2px 12px rgba(0,230,164,0.12); }
+.dir-a .swatch-row { display: flex; gap: 8px; margin-bottom: 14px; }
+.dir-a .swatch {
+  width: 48px; height: 48px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.08);
+  position: relative;
+}
+.dir-a .swatch-label { position: absolute; bottom: -16px; font-size: 9px; color: var(--nf-muted-grey); text-align: center; width: 100%; }
+.dir-a .token-name { font-family: monospace; font-size: 13px; font-weight: 500; margin-bottom: 8px; }
+.dir-a .token-values { display: flex; gap: 16px; font-family: monospace; font-size: 12px; color: var(--nf-deep-grey); }
+.dir-a .token-values span { display: flex; align-items: center; gap: 4px; }
+.dir-a .theme-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.dir-a .theme-dot.light { background: #f3f3f3; border: 1px solid #ccc; }
+.dir-a .theme-dot.dark { background: #333; }
+.dir-a .copy-btn {
+  float: right; background: none; border: 1px solid var(--nf-grey); border-radius: 6px;
+  padding: 4px 10px; font-size: 11px; color: var(--nf-muted-grey); cursor: pointer;
+  transition: all 0.15s; font-family: inherit;
+}
+.dir-a .copy-btn:hover { border-color: var(--nf-green); color: var(--nf-green); }
+
+/* ===== Direction B: Full-Width Rows ===== */
+.dir-b .mock-content { padding: 40px 48px; }
+.dir-b .page-title { font-family: 'Bitter', serif; font-size: 28px; margin-bottom: 8px; }
+.dir-b .page-subtitle { color: var(--nf-muted-grey); font-size: 14px; margin-bottom: 40px; }
+.dir-b .group-label {
+  font-family: 'Bitter', serif; font-size: 18px; margin-bottom: 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.dir-b .group-label::after { content: ''; flex: 1; height: 1px; background: var(--nf-grey); }
+.dir-b .token-list { margin-bottom: 48px; }
+.dir-b .token-row {
+  display: grid; grid-template-columns: 48px 48px 1fr 120px 120px 80px;
+  gap: 16px; align-items: center; padding: 16px 20px; border-radius: 8px;
+  transition: all 0.15s; cursor: pointer;
+}
+.dir-b .token-row:nth-child(odd) { background: var(--nf-light-grey); }
+.dir-b .token-row:hover { background: var(--nf-light-green); }
+.dir-b .swatch-sm { width: 48px; height: 40px; border-radius: 6px; border: 1px solid rgba(0,0,0,0.08); }
+.dir-b .token-name-row { font-family: monospace; font-size: 13px; }
+.dir-b .token-val { font-family: monospace; font-size: 12px; color: var(--nf-deep-grey); }
+.dir-b .theme-label { font-size: 10px; color: var(--nf-muted-grey); display: block; margin-bottom: 2px; }
+
+/* ===== Direction C: Magazine / Hero Swatches ===== */
+.dir-c .mock-content { padding: 40px 48px; }
+.dir-c .page-title { font-family: 'Bitter', serif; font-size: 28px; margin-bottom: 8px; }
+.dir-c .page-subtitle { color: var(--nf-muted-grey); font-size: 14px; margin-bottom: 40px; }
+.dir-c .hero-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 48px; }
+.dir-c .hero-card {
+  border-radius: 12px; overflow: hidden; border: 1px solid transparent;
+  transition: all 0.15s; cursor: pointer;
+}
+.dir-c .hero-card:hover { border-color: var(--nf-green); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+.dir-c .hero-swatch { height: 120px; position: relative; }
+.dir-c .hero-swatch-split { display: flex; height: 120px; }
+.dir-c .hero-swatch-split > div { flex: 1; }
+.dir-c .hero-swatch-split .divider { width: 2px; background: white; }
+.dir-c .hero-meta { padding: 14px 16px; background: var(--nf-light-grey); }
+.dir-c .hero-meta .token-name { font-family: monospace; font-size: 12px; margin-bottom: 6px; }
+.dir-c .hero-meta .token-vals { font-family: monospace; font-size: 11px; color: var(--nf-muted-grey); display: flex; gap: 12px; }
+
+/* ===== Direction D: Compact Dashboard ===== */
+.dir-d .mock-content { display: flex; }
+.dir-d .sidebar {
+  width: 220px; background: var(--nf-light-grey); padding: 24px 16px; border-right: 1px solid var(--nf-grey);
+  min-height: 480px;
+}
+.dir-d .sidebar-title { font-family: 'Bitter', serif; font-size: 14px; margin-bottom: 16px; color: var(--nf-muted-grey); }
+.dir-d .sidebar-item {
+  padding: 8px 12px; border-radius: 6px; font-size: 13px; cursor: pointer;
+  transition: all 0.15s; margin-bottom: 2px; display: flex; align-items: center; gap: 8px;
+}
+.dir-d .sidebar-item:hover { background: white; }
+.dir-d .sidebar-item.active { background: var(--nf-light-green); color: var(--nf-dark-green); font-weight: 500; }
+.dir-d .sidebar-dot { width: 10px; height: 10px; border-radius: 3px; }
+.dir-d .main-panel { flex: 1; padding: 32px 40px; }
+.dir-d .stats-row { display: flex; gap: 16px; margin-bottom: 32px; }
+.dir-d .stat-card {
+  background: var(--nf-light-grey); border-radius: 8px; padding: 16px 20px; flex: 1;
+}
+.dir-d .stat-number { font-size: 24px; font-weight: 600; }
+.dir-d .stat-label { font-size: 12px; color: var(--nf-muted-grey); margin-top: 4px; }
+.dir-d .compact-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.dir-d .compact-card {
+  background: var(--nf-light-grey); border-radius: 8px; padding: 12px;
+  border: 1px solid transparent; transition: all 0.15s; cursor: pointer;
+}
+.dir-d .compact-card:hover { border-color: var(--nf-green); }
+.dir-d .compact-swatch { height: 32px; border-radius: 4px; margin-bottom: 8px; border: 1px solid rgba(0,0,0,0.06); }
+.dir-d .compact-name { font-family: monospace; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ===== Direction E: Two-Panel with Detail ===== */
+.dir-e .mock-content { display: flex; }
+.dir-e .list-panel { width: 400px; border-right: 1px solid var(--nf-grey); padding: 24px; overflow-y: auto; max-height: 520px; }
+.dir-e .search-input {
+  width: 100%; padding: 10px 14px; border: 1px solid var(--nf-grey); border-radius: 8px;
+  font-size: 14px; margin-bottom: 20px; font-family: inherit;
+  outline: none; transition: border-color 0.15s;
+}
+.dir-e .search-input:focus { border-color: var(--nf-green); }
+.dir-e .list-item {
+  display: flex; align-items: center; gap: 12px; padding: 12px;
+  border-radius: 8px; cursor: pointer; transition: all 0.15s; margin-bottom: 4px;
+}
+.dir-e .list-item:hover { background: var(--nf-light-grey); }
+.dir-e .list-item.selected { background: var(--nf-light-green); }
+.dir-e .list-swatch { width: 36px; height: 36px; border-radius: 6px; flex-shrink: 0; border: 1px solid rgba(0,0,0,0.08); }
+.dir-e .list-info { flex: 1; min-width: 0; }
+.dir-e .list-name { font-family: monospace; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dir-e .list-val { font-size: 11px; color: var(--nf-muted-grey); }
+.dir-e .detail-panel { flex: 1; padding: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.dir-e .detail-swatch-large { width: 200px; height: 200px; border-radius: 16px; margin-bottom: 24px; display: flex; border: 1px solid rgba(0,0,0,0.06); }
+.dir-e .detail-swatch-large > div { flex: 1; }
+.dir-e .detail-swatch-large > div:first-child { border-radius: 16px 0 0 16px; }
+.dir-e .detail-swatch-large > div:last-child { border-radius: 0 16px 16px 0; }
+.dir-e .detail-name { font-family: monospace; font-size: 18px; margin-bottom: 16px; }
+.dir-e .detail-values { display: flex; gap: 32px; margin-bottom: 24px; }
+.dir-e .detail-value-box { text-align: center; }
+.dir-e .detail-value-label { font-size: 11px; color: var(--nf-muted-grey); margin-bottom: 4px; }
+.dir-e .detail-value-code { font-family: monospace; font-size: 14px; background: var(--nf-light-grey); padding: 6px 12px; border-radius: 6px; }
+.dir-e .detail-copy {
+  background: var(--nf-green); color: var(--nf-deep-navy); border: none; padding: 10px 24px;
+  border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: inherit;
+  transition: all 0.15s;
+}
+.dir-e .detail-copy:hover { background: var(--nf-dark-green); }
+
+/* ===== Direction F: Contrast Checker ===== */
+.dir-f .mock-content { padding: 40px 48px; }
+.dir-f .page-title { font-family: 'Bitter', serif; font-size: 28px; margin-bottom: 8px; }
+.dir-f .page-subtitle { color: var(--nf-muted-grey); font-size: 14px; margin-bottom: 32px; }
+.dir-f .contrast-header { display: flex; gap: 16px; margin-bottom: 32px; }
+.dir-f .color-picker {
+  flex: 1; background: var(--nf-light-grey); border-radius: 10px; padding: 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.dir-f .color-picker .swatch { width: 40px; height: 40px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.08); }
+.dir-f .color-picker .info { flex: 1; }
+.dir-f .color-picker .label { font-size: 11px; color: var(--nf-muted-grey); }
+.dir-f .color-picker .name { font-family: monospace; font-size: 13px; }
+.dir-f .contrast-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.dir-f .contrast-cell {
+  border-radius: 10px; padding: 16px; text-align: center; position: relative;
+  cursor: pointer; transition: all 0.15s; border: 2px solid transparent;
+}
+.dir-f .contrast-cell:hover { border-color: var(--nf-green); }
+.dir-f .contrast-sample { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+.dir-f .contrast-ratio { font-family: monospace; font-size: 12px; margin-bottom: 6px; }
+.dir-f .contrast-badge {
+  display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600;
+}
+.dir-f .badge-aaa { background: var(--nf-light-green); color: var(--nf-dark-green); }
+.dir-f .badge-aa { background: var(--nf-light-blue); color: var(--nf-blue); }
+.dir-f .badge-fail { background: #ffeaea; color: #cc3333; }
+.dir-f .contrast-name { font-family: monospace; font-size: 10px; color: inherit; opacity: 0.7; margin-top: 6px; }
+
+/* Command Palette Demo */
+.cmd-palette-demo {
+  max-width: 640px; margin: 0 auto 40px; background: var(--nf-deep-navy); border-radius: 12px;
+  box-shadow: 0 24px 64px rgba(0,14,56,0.3); overflow: hidden; border: 1px solid rgba(255,255,255,0.1);
+}
+.cmd-input {
+  padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.08);
+  display: flex; align-items: center; gap: 12px;
+}
+.cmd-input svg { color: var(--nf-green); width: 18px; height: 18px; }
+.cmd-input input {
+  flex: 1; background: none; border: none; outline: none; color: white;
+  font-size: 15px; font-family: inherit;
+}
+.cmd-input input::placeholder { color: rgba(255,255,255,0.3); }
+.cmd-results { padding: 8px; }
+.cmd-result {
+  display: flex; align-items: center; gap: 12px; padding: 10px 12px;
+  border-radius: 8px; transition: all 0.15s; cursor: pointer;
+}
+.cmd-result:hover, .cmd-result.highlighted { background: rgba(255,255,255,0.06); }
+.cmd-result .r-swatch { width: 32px; height: 32px; border-radius: 6px; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.1); }
+.cmd-result .r-info { flex: 1; }
+.cmd-result .r-name { font-family: monospace; font-size: 13px; color: white; }
+.cmd-result .r-values { font-family: monospace; font-size: 11px; color: rgba(255,255,255,0.4); display: flex; gap: 16px; }
+.cmd-result .r-copy {
+  color: var(--nf-green); font-size: 11px; opacity: 0;
+  transition: opacity 0.15s;
+}
+.cmd-result:hover .r-copy { opacity: 1; }
+.cmd-footer {
+  padding: 10px 20px; border-top: 1px solid rgba(255,255,255,0.06);
+  display: flex; gap: 16px; font-size: 11px; color: rgba(255,255,255,0.25);
+}
+.cmd-footer kbd {
+  background: rgba(255,255,255,0.08); padding: 1px 5px; border-radius: 3px;
+  font-family: inherit; margin-right: 4px;
+}
+</style>
+</head>
+<body>
+
+<nav class="showcase-nav">
+  <h1>Token Explorer <span>Design Directions</span></h1>
+  <a href="#cmd" class="active">Command Palette</a>
+  <a href="#dir-a">A: Card Grid</a>
+  <a href="#dir-b">B: Row List</a>
+  <a href="#dir-c">C: Hero Swatches</a>
+  <a href="#dir-d">D: Dashboard</a>
+  <a href="#dir-e">E: Split Panel</a>
+  <a href="#dir-f">F: Contrast Checker</a>
+</nav>
+
+<!-- Command Palette -->
+<section class="direction" id="cmd">
+  <div class="direction-header">
+    <span class="tag">Defining Interaction</span>
+    <h2>Command Palette</h2>
+    <p>The heart of the Token Explorer. Cmd+K opens this overlay from any page. Fuzzy search with visual previews, dual-theme values, and instant copy. This design is shared across all directions.</p>
+  </div>
+  <div class="cmd-palette-demo">
+    <div class="cmd-input">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" value="bg second" placeholder="Search tokens..." readonly>
+    </div>
+    <div class="cmd-results">
+      <div class="cmd-result highlighted">
+        <div class="r-swatch" style="background: linear-gradient(90deg, #f3f4f6 50%, #1f2937 50%);"></div>
+        <div class="r-info">
+          <div class="r-name">--color-bg-secondary</div>
+          <div class="r-values"><span>Light: #f3f4f6</span><span>Dark: #1f2937</span></div>
+        </div>
+        <div class="r-copy">⏎ copy</div>
+      </div>
+      <div class="cmd-result">
+        <div class="r-swatch" style="background: linear-gradient(90deg, #e5e7eb 50%, #374151 50%);"></div>
+        <div class="r-info">
+          <div class="r-name">--color-bg-secondary-hover</div>
+          <div class="r-values"><span>Light: #e5e7eb</span><span>Dark: #374151</span></div>
+        </div>
+        <div class="r-copy">⏎ copy</div>
+      </div>
+      <div class="cmd-result">
+        <div class="r-swatch" style="background: linear-gradient(90deg, #f9fafb 50%, #111827 50%);"></div>
+        <div class="r-info">
+          <div class="r-name">--color-bg-secondary-subtle</div>
+          <div class="r-values"><span>Light: #f9fafb</span><span>Dark: #111827</span></div>
+        </div>
+        <div class="r-copy">⏎ copy</div>
+      </div>
+    </div>
+    <div class="cmd-footer">
+      <span><kbd>↑↓</kbd> navigate</span>
+      <span><kbd>⏎</kbd> copy to clipboard</span>
+      <span><kbd>esc</kbd> close</span>
+    </div>
+  </div>
+</section>
+
+<!-- Direction A: Card Grid -->
+<section class="direction dir-a" id="dir-a">
+  <div class="direction-header">
+    <span class="tag">Direction A</span>
+    <h2>Card Grid</h2>
+    <p>Each token is a self-contained card with large side-by-side swatches, name, values, and copy button. Spacious 3-column grid grouped by semantic intent. Best for: visual scanning, onboarding (Niamh), and color comparison.</p>
+  </div>
+  <div class="mockup-frame">
+    <div class="mock-nav">
+      <div class="mock-nav-left">
+        <div class="mock-nav-logo">Token <span>Explorer</span></div>
+        <div class="mock-nav-links">
+          <a href="#" class="active">Colors</a>
+          <a href="#">Spacing</a>
+          <a href="#">Typography</a>
+          <a href="#">Borders</a>
+          <a href="#">Shadows</a>
+          <a href="#">Contrast</a>
+          <a href="#">Cheatsheet</a>
+        </div>
+      </div>
+      <div class="mock-nav-search">Search tokens... <kbd>⌘K</kbd></div>
+    </div>
+    <div class="mock-content">
+      <div class="page-title">Colors</div>
+      <div class="page-subtitle">42 color tokens across 6 semantic groups · Parsed from theme-govie CSS</div>
+      <div class="group-label">Primary</div>
+      <div class="token-grid">
+        <div class="token-card">
+          <div class="swatch-row">
+            <div class="swatch" style="background:#0b6340;"><span class="swatch-label">Light</span></div>
+            <div class="swatch" style="background:#4ade80;"><span class="swatch-label">Dark</span></div>
+          </div>
+          <div class="token-name">--color-primary <button class="copy-btn">Copy</button></div>
+          <div class="token-values"><span><span class="theme-dot light"></span>#0b6340</span><span><span class="theme-dot dark"></span>#4ade80</span></div>
+        </div>
+        <div class="token-card">
+          <div class="swatch-row">
+            <div class="swatch" style="background:#f0fdf4;"><span class="swatch-label">Light</span></div>
+            <div class="swatch" style="background:#052e16;"><span class="swatch-label">Dark</span></div>
+          </div>
+          <div class="token-name">--color-primary-bg <button class="copy-btn">Copy</button></div>
+          <div class="token-values"><span><span class="theme-dot light"></span>#f0fdf4</span><span><span class="theme-dot dark"></span>#052e16</span></div>
+        </div>
+        <div class="token-card">
+          <div class="swatch-row">
+            <div class="swatch" style="background:#ffffff;"><span class="swatch-label">Light</span></div>
+            <div class="swatch" style="background:#f0fdf4;"><span class="swatch-label">Dark</span></div>
+          </div>
+          <div class="token-name">--color-primary-text <button class="copy-btn">Copy</button></div>
+          <div class="token-values"><span><span class="theme-dot light"></span>#ffffff</span><span><span class="theme-dot dark"></span>#f0fdf4</span></div>
+        </div>
+      </div>
+      <div class="group-label">Warning</div>
+      <div class="token-grid">
+        <div class="token-card">
+          <div class="swatch-row">
+            <div class="swatch" style="background:#f59e0b;"><span class="swatch-label">Light</span></div>
+            <div class="swatch" style="background:#fbbf24;"><span class="swatch-label">Dark</span></div>
+          </div>
+          <div class="token-name">--color-warning <button class="copy-btn">Copy</button></div>
+          <div class="token-values"><span><span class="theme-dot light"></span>#f59e0b</span><span><span class="theme-dot dark"></span>#fbbf24</span></div>
+        </div>
+        <div class="token-card">
+          <div class="swatch-row">
+            <div class="swatch" style="background:#fffbeb;"><span class="swatch-label">Light</span></div>
+            <div class="swatch" style="background:#451a03;"><span class="swatch-label">Dark</span></div>
+          </div>
+          <div class="token-name">--color-warning-bg <button class="copy-btn">Copy</button></div>
+          <div class="token-values"><span><span class="theme-dot light"></span>#fffbeb</span><span><span class="theme-dot dark"></span>#451a03</span></div>
+        </div>
+        <div class="token-card">
+          <div class="swatch-row">
+            <div class="swatch" style="background:#78350f;"><span class="swatch-label">Light</span></div>
+            <div class="swatch" style="background:#fef3c7;"><span class="swatch-label">Dark</span></div>
+          </div>
+          <div class="token-name">--color-warning-text <button class="copy-btn">Copy</button></div>
+          <div class="token-values"><span><span class="theme-dot light"></span>#78350f</span><span><span class="theme-dot dark"></span>#fef3c7</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Direction B: Row List -->
+<section class="direction dir-b" id="dir-b">
+  <div class="direction-header">
+    <span class="tag">Direction B</span>
+    <h2>Full-Width Rows</h2>
+    <p>Each token is a horizontal row with aligned columns: light swatch, dark swatch, name, light value, dark value, copy action. Alternating row backgrounds. Best for: rapid scanning, power users (Liam), and comparing values across tokens.</p>
+  </div>
+  <div class="mockup-frame">
+    <div class="mock-nav">
+      <div class="mock-nav-left">
+        <div class="mock-nav-logo">Token <span>Explorer</span></div>
+        <div class="mock-nav-links">
+          <a href="#" class="active">Colors</a><a href="#">Spacing</a><a href="#">Typography</a><a href="#">Borders</a><a href="#">Shadows</a><a href="#">Contrast</a><a href="#">Cheatsheet</a>
+        </div>
+      </div>
+      <div class="mock-nav-search">Search tokens... <kbd>⌘K</kbd></div>
+    </div>
+    <div class="mock-content">
+      <div class="page-title">Colors</div>
+      <div class="page-subtitle">42 color tokens · Parsed from theme-govie CSS</div>
+      <div class="group-label">Primary</div>
+      <div class="token-list">
+        <div class="token-row">
+          <div class="swatch-sm" style="background:#0b6340;"></div>
+          <div class="swatch-sm" style="background:#4ade80;"></div>
+          <div class="token-name-row">--color-primary</div>
+          <div class="token-val"><span class="theme-label">Light</span>#0b6340</div>
+          <div class="token-val"><span class="theme-label">Dark</span>#4ade80</div>
+          <div><button class="copy-btn" style="float:none;padding:6px 14px;font-family:inherit;font-size:12px;border:1px solid #d9d9d9;border-radius:6px;cursor:pointer;background:none;color:#727783;">Copy</button></div>
+        </div>
+        <div class="token-row">
+          <div class="swatch-sm" style="background:#f0fdf4;"></div>
+          <div class="swatch-sm" style="background:#052e16;"></div>
+          <div class="token-name-row">--color-primary-bg</div>
+          <div class="token-val"><span class="theme-label">Light</span>#f0fdf4</div>
+          <div class="token-val"><span class="theme-label">Dark</span>#052e16</div>
+          <div><button class="copy-btn" style="float:none;padding:6px 14px;font-family:inherit;font-size:12px;border:1px solid #d9d9d9;border-radius:6px;cursor:pointer;background:none;color:#727783;">Copy</button></div>
+        </div>
+        <div class="token-row">
+          <div class="swatch-sm" style="background:#ffffff; border: 1px solid #e5e7eb;"></div>
+          <div class="swatch-sm" style="background:#f0fdf4;"></div>
+          <div class="token-name-row">--color-primary-text</div>
+          <div class="token-val"><span class="theme-label">Light</span>#ffffff</div>
+          <div class="token-val"><span class="theme-label">Dark</span>#f0fdf4</div>
+          <div><button class="copy-btn" style="float:none;padding:6px 14px;font-family:inherit;font-size:12px;border:1px solid #d9d9d9;border-radius:6px;cursor:pointer;background:none;color:#727783;">Copy</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Direction C: Hero Swatches -->
+<section class="direction dir-c" id="dir-c">
+  <div class="direction-header">
+    <span class="tag">Direction C</span>
+    <h2>Hero Swatches</h2>
+    <p>Color-dominant layout inspired by Coolors.co. Large split swatches (light | dark) with metadata below. The color IS the card. Best for: visual designers (Siobhán), learning the color system (Niamh), and making color the primary content.</p>
+  </div>
+  <div class="mockup-frame">
+    <div class="mock-nav">
+      <div class="mock-nav-left">
+        <div class="mock-nav-logo">Token <span>Explorer</span></div>
+        <div class="mock-nav-links">
+          <a href="#" class="active">Colors</a><a href="#">Spacing</a><a href="#">Typography</a><a href="#">Borders</a><a href="#">Shadows</a><a href="#">Contrast</a><a href="#">Cheatsheet</a>
+        </div>
+      </div>
+      <div class="mock-nav-search">Search tokens... <kbd>⌘K</kbd></div>
+    </div>
+    <div class="mock-content">
+      <div class="page-title">Colors</div>
+      <div class="page-subtitle">42 color tokens · Light | Dark side by side</div>
+      <div class="hero-grid">
+        <div class="hero-card"><div class="hero-swatch-split"><div style="background:#0b6340;"></div><div class="divider"></div><div style="background:#4ade80;"></div></div><div class="hero-meta"><div class="token-name">--color-primary</div><div class="token-vals"><span>#0b6340</span><span>#4ade80</span></div></div></div>
+        <div class="hero-card"><div class="hero-swatch-split"><div style="background:#f0fdf4;"></div><div class="divider"></div><div style="background:#052e16;"></div></div><div class="hero-meta"><div class="token-name">--color-primary-bg</div><div class="token-vals"><span>#f0fdf4</span><span>#052e16</span></div></div></div>
+        <div class="hero-card"><div class="hero-swatch-split"><div style="background:#dc2626;"></div><div class="divider"></div><div style="background:#f87171;"></div></div><div class="hero-meta"><div class="token-name">--color-error</div><div class="token-vals"><span>#dc2626</span><span>#f87171</span></div></div></div>
+        <div class="hero-card"><div class="hero-swatch-split"><div style="background:#fef2f2;"></div><div class="divider"></div><div style="background:#450a0a;"></div></div><div class="hero-meta"><div class="token-name">--color-error-bg</div><div class="token-vals"><span>#fef2f2</span><span>#450a0a</span></div></div></div>
+        <div class="hero-card"><div class="hero-swatch-split"><div style="background:#f59e0b;"></div><div class="divider"></div><div style="background:#fbbf24;"></div></div><div class="hero-meta"><div class="token-name">--color-warning</div><div class="token-vals"><span>#f59e0b</span><span>#fbbf24</span></div></div></div>
+        <div class="hero-card"><div class="hero-swatch-split"><div style="background:#2563eb;"></div><div class="divider"></div><div style="background:#60a5fa;"></div></div><div class="hero-meta"><div class="token-name">--color-info</div><div class="token-vals"><span>#2563eb</span><span>#60a5fa</span></div></div></div>
+        <div class="hero-card"><div class="hero-swatch-split"><div style="background:#16a34a;"></div><div class="divider"></div><div style="background:#4ade80;"></div></div><div class="hero-meta"><div class="token-name">--color-success</div><div class="token-vals"><span>#16a34a</span><span>#4ade80</span></div></div></div>
+        <div class="hero-card"><div class="hero-swatch-split"><div style="background:#f3f4f6;"></div><div class="divider"></div><div style="background:#1f2937;"></div></div><div class="hero-meta"><div class="token-name">--color-bg-secondary</div><div class="token-vals"><span>#f3f4f6</span><span>#1f2937</span></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Direction D: Dashboard -->
+<section class="direction dir-d" id="dir-d">
+  <div class="direction-header">
+    <span class="tag">Direction D</span>
+    <h2>Dashboard with Sidebar</h2>
+    <p>Overview-first layout with category sidebar, stats summary, and compact token grid. Best for: getting a bird's-eye view of the token system, but note this adds sidebar navigation complexity we identified as an anti-pattern.</p>
+  </div>
+  <div class="mockup-frame">
+    <div class="mock-nav">
+      <div class="mock-nav-left">
+        <div class="mock-nav-logo">Token <span>Explorer</span></div>
+      </div>
+      <div class="mock-nav-search">Search tokens... <kbd>⌘K</kbd></div>
+    </div>
+    <div class="mock-content">
+      <div class="sidebar">
+        <div class="sidebar-title">Categories</div>
+        <div class="sidebar-item active"><div class="sidebar-dot" style="background:var(--nf-green);"></div>Colors (42)</div>
+        <div class="sidebar-item"><div class="sidebar-dot" style="background:var(--nf-blue);"></div>Spacing (16)</div>
+        <div class="sidebar-item"><div class="sidebar-dot" style="background:var(--nf-purple);"></div>Typography (12)</div>
+        <div class="sidebar-item"><div class="sidebar-dot" style="background:var(--nf-grey);"></div>Borders (8)</div>
+        <div class="sidebar-item"><div class="sidebar-dot" style="background:var(--nf-deep-grey);"></div>Shadows (6)</div>
+      </div>
+      <div class="main-panel">
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-number">84</div><div class="stat-label">Total Tokens</div></div>
+          <div class="stat-card"><div class="stat-number">42</div><div class="stat-label">Color Tokens</div></div>
+          <div class="stat-card"><div class="stat-number">6</div><div class="stat-label">Semantic Groups</div></div>
+          <div class="stat-card"><div class="stat-number" style="color:var(--nf-green);">AA+</div><div class="stat-label">WCAG Status</div></div>
+        </div>
+        <div class="compact-grid">
+          <div class="compact-card"><div class="compact-swatch" style="background:linear-gradient(90deg,#0b6340 50%,#4ade80 50%);"></div><div class="compact-name">--color-primary</div></div>
+          <div class="compact-card"><div class="compact-swatch" style="background:linear-gradient(90deg,#f0fdf4 50%,#052e16 50%);"></div><div class="compact-name">--color-primary-bg</div></div>
+          <div class="compact-card"><div class="compact-swatch" style="background:linear-gradient(90deg,#dc2626 50%,#f87171 50%);"></div><div class="compact-name">--color-error</div></div>
+          <div class="compact-card"><div class="compact-swatch" style="background:linear-gradient(90deg,#f59e0b 50%,#fbbf24 50%);"></div><div class="compact-name">--color-warning</div></div>
+          <div class="compact-card"><div class="compact-swatch" style="background:linear-gradient(90deg,#2563eb 50%,#60a5fa 50%);"></div><div class="compact-name">--color-info</div></div>
+          <div class="compact-card"><div class="compact-swatch" style="background:linear-gradient(90deg,#16a34a 50%,#4ade80 50%);"></div><div class="compact-name">--color-success</div></div>
+          <div class="compact-card"><div class="compact-swatch" style="background:linear-gradient(90deg,#f3f4f6 50%,#1f2937 50%);"></div><div class="compact-name">--color-bg-secondary</div></div>
+          <div class="compact-card"><div class="compact-swatch" style="background:linear-gradient(90deg,#e5e7eb 50%,#374151 50%);"></div><div class="compact-name">--color-border</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Direction E: Split Panel -->
+<section class="direction dir-e" id="dir-e">
+  <div class="direction-header">
+    <span class="tag">Direction E</span>
+    <h2>Split Panel with Detail</h2>
+    <p>List + detail layout. Browse tokens on the left, see a large preview with full metadata on the right. Best for: deep exploration (Aoife), reverse lookup (Siobhán), and cases where you want to study a token before copying.</p>
+  </div>
+  <div class="mockup-frame">
+    <div class="mock-nav">
+      <div class="mock-nav-left">
+        <div class="mock-nav-logo">Token <span>Explorer</span></div>
+        <div class="mock-nav-links">
+          <a href="#" class="active">Colors</a><a href="#">Spacing</a><a href="#">Typography</a><a href="#">Borders</a><a href="#">Shadows</a><a href="#">Contrast</a><a href="#">Cheatsheet</a>
+        </div>
+      </div>
+      <div class="mock-nav-search">Search tokens... <kbd>⌘K</kbd></div>
+    </div>
+    <div class="mock-content">
+      <div class="list-panel">
+        <input class="search-input" type="text" placeholder="Filter colors..." readonly>
+        <div class="list-item"><div class="list-swatch" style="background:#0b6340;"></div><div class="list-info"><div class="list-name">--color-primary</div><div class="list-val">#0b6340</div></div></div>
+        <div class="list-item selected"><div class="list-swatch" style="background:#f0fdf4;"></div><div class="list-info"><div class="list-name">--color-primary-bg</div><div class="list-val">#f0fdf4</div></div></div>
+        <div class="list-item"><div class="list-swatch" style="background:#dc2626;"></div><div class="list-info"><div class="list-name">--color-error</div><div class="list-val">#dc2626</div></div></div>
+        <div class="list-item"><div class="list-swatch" style="background:#f59e0b;"></div><div class="list-info"><div class="list-name">--color-warning</div><div class="list-val">#f59e0b</div></div></div>
+        <div class="list-item"><div class="list-swatch" style="background:#2563eb;"></div><div class="list-info"><div class="list-name">--color-info</div><div class="list-val">#2563eb</div></div></div>
+        <div class="list-item"><div class="list-swatch" style="background:#16a34a;"></div><div class="list-info"><div class="list-name">--color-success</div><div class="list-val">#16a34a</div></div></div>
+      </div>
+      <div class="detail-panel">
+        <div class="detail-swatch-large">
+          <div style="background:#f0fdf4; border-radius: 16px 0 0 16px;"></div>
+          <div style="background:#052e16; border-radius: 0 16px 16px 0;"></div>
+        </div>
+        <div class="detail-name">--color-primary-bg</div>
+        <div class="detail-values">
+          <div class="detail-value-box"><div class="detail-value-label">Light Theme</div><div class="detail-value-code">#f0fdf4</div></div>
+          <div class="detail-value-box"><div class="detail-value-label">Dark Theme</div><div class="detail-value-code">#052e16</div></div>
+        </div>
+        <button class="detail-copy">Copy var(--color-primary-bg)</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Direction F: Contrast Checker -->
+<section class="direction dir-f" id="dir-f">
+  <div class="direction-header">
+    <span class="tag">Direction F</span>
+    <h2>WCAG Contrast Checker</h2>
+    <p>The dedicated contrast checking view. Select a background token, see all text tokens rated against it with AA/AAA badges. This is a specialized route (/contrast), not the main browsing experience. Best for: Ravi's accessibility verification journey.</p>
+  </div>
+  <div class="mockup-frame">
+    <div class="mock-nav">
+      <div class="mock-nav-left">
+        <div class="mock-nav-logo">Token <span>Explorer</span></div>
+        <div class="mock-nav-links">
+          <a href="#">Colors</a><a href="#">Spacing</a><a href="#">Typography</a><a href="#">Borders</a><a href="#">Shadows</a><a href="#" class="active">Contrast</a><a href="#">Cheatsheet</a>
+        </div>
+      </div>
+      <div class="mock-nav-search">Search tokens... <kbd>⌘K</kbd></div>
+    </div>
+    <div class="mock-content">
+      <div class="page-title">Contrast Checker</div>
+      <div class="page-subtitle">WCAG 2.1 contrast ratios for all color token pairs</div>
+      <div class="contrast-header">
+        <div class="color-picker">
+          <div class="swatch" style="background:#f0fdf4;"></div>
+          <div class="info"><div class="label">Background</div><div class="name">--color-primary-bg</div></div>
+        </div>
+        <div class="color-picker">
+          <div class="swatch" style="background:#0b6340;"></div>
+          <div class="info"><div class="label">Suggested pairing</div><div class="name">--color-primary</div></div>
+        </div>
+      </div>
+      <div class="contrast-grid">
+        <div class="contrast-cell" style="background:#f0fdf4;">
+          <div class="contrast-sample" style="color:#0b6340;">Aa</div>
+          <div class="contrast-ratio">7.2:1</div>
+          <span class="contrast-badge badge-aaa">AAA</span>
+          <div class="contrast-name">--color-primary</div>
+        </div>
+        <div class="contrast-cell" style="background:#f0fdf4;">
+          <div class="contrast-sample" style="color:#000e38;">Aa</div>
+          <div class="contrast-ratio">16.8:1</div>
+          <span class="contrast-badge badge-aaa">AAA</span>
+          <div class="contrast-name">--color-text-primary</div>
+        </div>
+        <div class="contrast-cell" style="background:#f0fdf4;">
+          <div class="contrast-sample" style="color:#444450;">Aa</div>
+          <div class="contrast-ratio">8.1:1</div>
+          <span class="contrast-badge badge-aaa">AAA</span>
+          <div class="contrast-name">--color-text-secondary</div>
+        </div>
+        <div class="contrast-cell" style="background:#f0fdf4;">
+          <div class="contrast-sample" style="color:#dc2626;">Aa</div>
+          <div class="contrast-ratio">4.8:1</div>
+          <span class="contrast-badge badge-aa">AA</span>
+          <div class="contrast-name">--color-error</div>
+        </div>
+        <div class="contrast-cell" style="background:#f0fdf4;">
+          <div class="contrast-sample" style="color:#d9d9d9;">Aa</div>
+          <div class="contrast-ratio">1.4:1</div>
+          <span class="contrast-badge badge-fail">Fail</span>
+          <div class="contrast-name">--color-border</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+document.querySelectorAll('.showcase-nav a').forEach(link => {
+  link.addEventListener('click', function(e) {
+    document.querySelectorAll('.showcase-nav a').forEach(a => a.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
