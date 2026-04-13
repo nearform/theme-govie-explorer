@@ -28,8 +28,8 @@ describe('next.config', () => {
   it('sets basePath and assetPrefix when GITHUB_PAGES is true', async () => {
     process.env.GITHUB_PAGES = 'true';
     const { default: config } = await import('./next.config.ts');
-    expect(config.basePath).toBe('/theme-govie-tokens');
-    expect(config.assetPrefix).toBe('/theme-govie-tokens/');
+    expect(config.basePath).toBe('/theme-govie-explorer');
+    expect(config.assetPrefix).toBe('/theme-govie-explorer/');
   });
 
   it('does not set basePath when GITHUB_PAGES is a non-true value', async () => {
