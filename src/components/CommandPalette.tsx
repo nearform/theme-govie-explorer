@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 import { useTokenSearch } from '@/hooks/useTokenSearch';
 import { buildTokenPermalink, categoryToRoute } from '@/lib/tokenUrl';
 import type { Token } from '@/types/token';
@@ -23,6 +24,7 @@ export function CommandPalette({ tokens, isOpen, onClose }: CommandPaletteProps)
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const trapRef = useFocusTrap(isOpen);
 
   useEffect(() => {
     if (isOpen) {
@@ -84,6 +86,7 @@ export function CommandPalette({ tokens, isOpen, onClose }: CommandPaletteProps)
 
   return (
     <div
+      ref={trapRef}
       className="fixed inset-0 z-50 flex justify-center pt-[20vh]"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
@@ -182,6 +185,9 @@ export function CommandPalette({ tokens, isOpen, onClose }: CommandPaletteProps)
           </span>
           <span>
             <kbd className="rounded bg-nf-light-grey px-1 py-0.5 font-mono">esc</kbd> close
+          </span>
+          <span className="ml-auto">
+            <kbd className="rounded bg-nf-light-grey px-1 py-0.5 font-mono">?</kbd> all shortcuts
           </span>
         </div>
       </div>

@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { getTokenFromSearchParams } from '@/lib/tokenUrl';
 import type { Token } from '@/types/token';
 
+import { CategoryChips } from './CategoryChips';
 import { EmptyState } from './EmptyState';
 import { FilterInput } from './FilterInput';
 import { SplitPanel } from './SplitPanel';
@@ -26,9 +27,11 @@ export function CategoryPage({ category, groups }: CategoryPageProps) {
   const searchParams = useSearchParams();
   const [selected, setSelected] = useState<Token | null>(null);
   const [filter, setFilter] = useState('');
+  const [activeChip, setActiveChip] = useState<string | null>(null);
   const [showMobileDetail, setShowMobileDetail] = useState(false);
 
   const allTokens = useMemo(() => groups.flatMap((g) => g.tokens), [groups]);
+  const groupLabels = useMemo(() => groups.map((g) => g.label), [groups]);
 
   const permalinkToken = useMemo(() => getTokenFromSearchParams(searchParams), [searchParams]);
 
@@ -51,15 +54,21 @@ export function CategoryPage({ category, groups }: CategoryPageProps) {
   }, []);
 
   const filteredGroups = useMemo(() => {
-    if (!filter) return groups;
-    const lowerFilter = filter.toLowerCase();
-    return groups
-      .map((group) => ({
-        ...group,
-        tokens: group.tokens.filter((t) => t.name.toLowerCase().includes(lowerFilter)),
-      }))
-      .filter((group) => group.tokens.length > 0);
-  }, [groups, filter]);
+    let result = groups;
+    if (activeChip) {
+      result = result.filter((g) => g.label === activeChip);
+    }
+    if (filter) {
+      const lowerFilter = filter.toLowerCase();
+      result = result
+        .map((group) => ({
+          ...group,
+          tokens: group.tokens.filter((t) => t.name.toLowerCase().includes(lowerFilter)),
+        }))
+        .filter((group) => group.tokens.length > 0);
+    }
+    return result;
+  }, [groups, filter, activeChip]);
 
   const totalFiltered = filteredGroups.reduce((sum, g) => sum + g.tokens.length, 0);
 
@@ -70,6 +79,7 @@ export function CategoryPage({ category, groups }: CategoryPageProps) {
       list={
         <div className="flex h-full flex-col">
           <FilterInput value={filter} onChange={setFilter} placeholder={`Filter ${category}…`} />
+          <CategoryChips labels={groupLabels} activeLabel={activeChip} onSelect={setActiveChip} />
           {totalFiltered === 0 && filter ? (
             <div className="flex flex-1 flex-col items-center justify-center p-6 text-center">
               <p className="text-sm text-nf-muted-grey">

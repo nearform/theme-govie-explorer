@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-04-10
-last_updated: 2026-04-10T18:00:00Z
+last_updated: 2026-04-11T00:01:00Z
 project: theme-govie-tokens
 project_key: NOKEY
 tracking_system: file-system
@@ -43,33 +43,43 @@ story_location: _bmad-output/implementation-artifacts
 
 development_status:
   # Epic 1: Foundation & Token Data Pipeline
-  epic-1: in-progress
-  1-1-project-scaffolding-design-tokens-data-model: review
-  1-2-css-token-parser-categorizer: ready-for-dev
-  1-3-wcag-contrast-computation: backlog
-  1-4-token-pipeline-orchestration-build-validation: backlog
-  1-5-app-shell-with-nearform-branded-navigation: backlog
+  # Verified 2026-04-11: All pipeline files, tests, app shell, routes confirmed in codebase. 168 tests green, build passes.
+  epic-1: done
+  1-1-project-scaffolding-design-tokens-data-model: done
+  1-2-css-token-parser-categorizer: done
+  1-3-wcag-contrast-computation: done
+  1-4-token-pipeline-orchestration-build-validation: done
+  1-5-app-shell-with-nearform-branded-navigation: done
   epic-1-retrospective: optional
 
   # Epic 2: Token Browsing, Visual Exploration & Sharing
-  epic-2: backlog
-  2-1-split-panel-layout-color-token-browsing: backlog
-  2-2-copy-to-clipboard-permalink-sharing: backlog
-  2-3-spacing-typography-border-shadow-token-pages: backlog
-  2-4-category-filtering-list-search: backlog
-  2-5-landing-page-cheat-sheet-view: backlog
-  2-6-responsive-layout-accessibility-polish: backlog
+  # Verified 2026-04-11: SplitPanel, ColorSwatch (4 sizes), all category pages, CopyButton (3 variants), permalinks, CategoryChips, cheatsheet, responsive+a11y confirmed.
+  epic-2: done
+  2-1-split-panel-layout-color-token-browsing: done
+  2-2-copy-to-clipboard-permalink-sharing: done
+  2-3-spacing-typography-border-shadow-token-pages: done
+  2-4-category-filtering-list-search: done
+  2-5-landing-page-cheat-sheet-view: done
+  2-6-responsive-layout-accessibility-polish: done
   epic-2-retrospective: optional
 
   # Epic 3: Search, Command Palette & Keyboard Navigation
-  epic-3: backlog
-  3-1-fusejs-search-engine-reverse-lookup: backlog
-  3-2-command-palette-with-visual-previews: backlog
-  3-3-global-keyboard-navigation: backlog
+  # Verified 2026-04-11: Fuse.js search, CommandPalette with focus trap, useKeyboardShortcuts hook, ? overlay all confirmed.
+  epic-3: done
+  3-1-fusejs-search-engine-reverse-lookup: done
+  3-2-command-palette-with-visual-previews: done
+  3-3-global-keyboard-navigation: done
   epic-3-retrospective: optional
 
   # Epic 4: WCAG Contrast Checker & Accessible Pairings
-  epic-4: backlog
-  4-1-contrast-checker-page-matrix-grid: backlog
-  4-2-wcag-badges-accessible-pairing-suggestions: backlog
+  # Verified 2026-04-11: /contrast page, BackgroundPicker, ContrastCell grid, WcagBadge, PairPopover, semantic pairings confirmed.
+  epic-4: done
+  4-1-contrast-checker-page-matrix-grid: done
+  4-2-wcag-badges-accessible-pairing-suggestions: done
   epic-4-retrospective: optional
+
+  # Epic 5: Nice-to-Haves & Design System Integration
+  # Verified 2026-04-11: generate-token-usage.ts, tokenUsage.json, "Used by" in detail panel, /usage route confirmed.
+  epic-5: done
+  5-1-token-usage-design-system-react: done
+  epic-5-retrospective: optional

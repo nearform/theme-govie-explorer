@@ -536,3 +536,37 @@ So that I can choose accessible color combinations confidently and use the recom
 **Then** it shows: both token names, the contrast ratio, the WCAG level, a "Copy pair" button, and a "Copy permalink" button
 **And** the permalink encodes both tokens in the URL (e.g., `/contrast?bg=color-warning-bg&fg=color-warning-text`)
 **And** navigating to a contrast permalink auto-selects the background and highlights the foreground cell
+
+## Epic 5: Nice-to-Haves & Design System Integration
+
+Post-MVP enhancements that connect the token explorer to the `@ogcio/design-system-react` component library, providing usage context and bridging the gap between raw design tokens and the React components that consume them.
+
+### Story 5.1: Token Usage Mapping for design-system-react Components
+
+As a developer,
+I want to see which `@ogcio/design-system-react` components use each token,
+So that I can understand the practical impact of a token and find the right component when I know the token (or vice versa).
+
+**Acceptance Criteria:**
+
+**Given** the build-time pipeline runs
+**When** `scripts/generate-token-usage.ts` processes the `@ogcio/design-system-react` package
+**Then** it scans `dist/styles.css` and all component JS files under `dist/` for references to `--gieds-*` CSS custom properties and `gi-*` utility classes
+**And** it produces a `src/data/tokenUsage.json` mapping each token name to an array of component names that reference it
+**And** it produces a reverse mapping from each component name to the tokens it uses
+
+**Given** a token is selected in any category page's detail panel
+**When** the TokenDetail component renders
+**Then** a "Used by" section displays the list of `design-system-react` components that reference this token
+**And** each component name links to the external Storybook documentation at `ds.services.gov.ie/storybook-react` (if available)
+
+**Given** the user navigates to `/usage` (new route)
+**When** the page renders
+**Then** a searchable list of all `design-system-react` components is displayed
+**And** clicking a component shows all tokens it uses, grouped by category (color, spacing, typography, border, shadow)
+**And** clicking a token in the usage list navigates to that token's detail page in the appropriate category
+
+**Given** the `@ogcio/design-system-react` package is updated to a new version
+**When** the pipeline runs
+**Then** the token usage mapping regenerates automatically, reflecting any changes in component-token relationships
+**And** the build logs the number of components analyzed and tokens mapped

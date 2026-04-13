@@ -3,6 +3,7 @@ import { Bitter, Inter } from 'next/font/google';
 
 import { AppNav } from '@/components/AppNav';
 import { CommandPaletteProvider } from '@/components/CommandPaletteProvider';
+import { KeyboardShortcutsProvider } from '@/components/KeyboardShortcutsProvider';
 
 import './globals.css';
 
@@ -39,6 +40,7 @@ export default function RootLayout({
         </a>
         <AppNav />
         <CommandPaletteProvider />
+        <KeyboardShortcutsProvider />
         <main id="main-content" className="min-h-[calc(100vh-56px)] bg-white">
           {children}
         </main>

@@ -10,7 +10,8 @@
     "lint:fix": "biome check --fix .",
     "format": "biome format --write .",
     "test": "vitest run",
-    "generate-tokens": "tsx scripts/generate-tokens.ts"
+    "generate-tokens": "tsx scripts/generate-tokens.ts",
+    "generate-token-usage": "tsx scripts/generate-token-usage.ts"
   },
   "dependencies": {
     "@ogcio/design-system-react": "1.34.0",
