@@ -162,6 +162,13 @@ Developers can find any token instantly via the Cmd+K command palette with fuzzy
 Developers can verify WCAG contrast compliance for any color token pair in a visual matrix, see AA/AAA ratings at a glance, and discover recommended accessible text/background combinations with suggested semantic pairings.
 **FRs covered:** FR16, FR17, FR18
 
+### Epic 5: Nice-to-Haves & Design System Integration
+Post-MVP enhancements that connect the token explorer to the `@ogcio/design-system-react` component library, providing usage context and bridging the gap between raw design tokens and the React components that consume them.
+
+### Epic 6: Deployment & CI/CD
+Automated deployment pipeline that builds and publishes the static token explorer to a hosting platform via GitHub Actions, with an alternative Vercel configuration for teams preferring preview deployments per PR.
+**FRs covered:** FR25 (extended — zero-friction access via live URL)
+
 ## Epic 1: Foundation & Token Data Pipeline
 
 The project is scaffolded with Next.js 16 static export, the build-time pipeline extracts all tokens from `@ogcio/theme-govie@1.21.4` CSS, categorizes them, pre-computes WCAG contrast data, validates completeness, and produces static JSON. The app shell with NearForm-branded navigation is in place and deployable as a zero-friction static site.
@@ -570,3 +577,70 @@ So that I can understand the practical impact of a token and find the right comp
 **When** the pipeline runs
 **Then** the token usage mapping regenerates automatically, reflecting any changes in component-token relationships
 **And** the build logs the number of components analyzed and tokens mapped
+
+## Epic 6: Deployment & CI/CD
+
+Automated deployment pipeline that builds and publishes the static token explorer to a hosting platform via GitHub Actions, ensuring every push to the main branch produces a live, up-to-date site with zero manual intervention.
+
+### Story 6.1: GitHub Actions CI/CD Pipeline with GitHub Pages Deployment
+
+As a developer,
+I want an automated GitHub Actions workflow that builds and deploys the static site to GitHub Pages on every push to main,
+So that the token explorer is always live and up-to-date without manual deployment steps.
+
+**Acceptance Criteria:**
+
+**Given** a push is made to the `main` branch
+**When** the GitHub Actions workflow `deploy.yml` triggers
+**Then** it installs dependencies with `npm ci`
+**And** it runs `npm run generate-tokens` and `npm run generate-token-usage` to produce fresh token data
+**And** it runs `npm run build` to produce the static `out/` directory
+**And** it uploads the `out/` directory as a GitHub Pages artifact using `actions/upload-pages-artifact@v3`
+**And** it deploys to GitHub Pages using `actions/deploy-pages@v4`
+**And** the deployed site is accessible at the repository's GitHub Pages URL
+
+**Given** the repository uses a subpath URL (e.g., `https://<org>.github.io/<repo>/`)
+**When** `next.config.ts` is configured for GitHub Pages
+**Then** `basePath` and `assetPrefix` are set to `/<repo-name>` conditionally via an environment variable (`GITHUB_PAGES=true`)
+**And** the default development experience (`npm run dev`) is unaffected — no basePath applied locally
+
+**Given** the workflow runs
+**When** any step fails (install, generate, build, deploy)
+**Then** the workflow fails with a clear error message identifying the failing step
+**And** no partial deployment occurs — GitHub Pages retains the previous successful deployment
+
+**Given** the workflow completes successfully
+**When** the deployment finishes
+**Then** the site is live within 2 minutes of the push
+**And** the workflow run shows a green checkmark in the GitHub Actions UI
+
+**And** the workflow uses Node.js 20 (matching the project requirement of Node.js 20.9+ LTS)
+**And** the workflow uses `actions/configure-pages@v5` to enable GitHub Pages
+**And** the workflow defines `permissions: pages: write, id-token: write, contents: read` for secure deployment
+**And** the workflow includes a `concurrency` group to prevent overlapping deployments
+
+### Story 6.2: Vercel Deployment Configuration
+
+As a developer,
+I want an alternative Vercel deployment configuration ready to use,
+So that the team can deploy to Vercel with preview deployments per PR if GitHub Pages doesn't meet their needs.
+
+**Acceptance Criteria:**
+
+**Given** the repository is connected to Vercel
+**When** a `vercel.json` configuration file exists in the project root
+**Then** it specifies the build command as `npm run generate-tokens && npm run generate-token-usage && npm run build`
+**And** it specifies the output directory as `out`
+**And** it specifies the framework as `nextjs`
+
+**Given** a pull request is opened against `main`
+**When** Vercel detects the PR
+**Then** a preview deployment is created automatically with a unique URL
+**And** the preview reflects the PR branch's token data and UI changes
+
+**Given** a push is made to `main`
+**When** Vercel detects the push
+**Then** a production deployment is triggered and the live site updates
+
+**And** a `README.md` deployment section documents both deployment options (GitHub Pages and Vercel) with step-by-step instructions
+**And** the `next.config.ts` `basePath` logic does not interfere with Vercel deployments (only applies when `GITHUB_PAGES=true`)

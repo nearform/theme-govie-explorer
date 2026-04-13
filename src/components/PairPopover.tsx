@@ -45,7 +45,8 @@ export function PairPopover({
   const copyPermalink = useCallback(async () => {
     const bg = bgName.replace(/^--/, '');
     const fg = fgName.replace(/^--/, '');
-    const url = `${window.location.origin}/contrast?bg=${encodeURIComponent(bg)}&fg=${encodeURIComponent(fg)}`;
+    const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+    const url = `${window.location.origin}${basePath}/contrast?bg=${encodeURIComponent(bg)}&fg=${encodeURIComponent(fg)}`;
     try {
       await navigator.clipboard.writeText(url);
       flash('link');

@@ -52,7 +52,8 @@ export function PermalinkButton({ category, tokenName }: PermalinkButtonProps) {
     if (timerRef.current) clearTimeout(timerRef.current);
 
     const path = buildTokenPermalink(category, tokenName);
-    const url = `${window.location.origin}${path}`;
+    const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+    const url = `${window.location.origin}${basePath}${path}`;
 
     try {
       await navigator.clipboard.writeText(url);

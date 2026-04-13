@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-04-10
-last_updated: 2026-04-11T00:01:00Z
+last_updated: 2026-04-13T12:00:00Z
 project: theme-govie-tokens
 project_key: NOKEY
 tracking_system: file-system
@@ -83,3 +83,9 @@ development_status:
   epic-5: done
   5-1-token-usage-design-system-react: done
   epic-5-retrospective: optional
+
+  # Epic 6: Deployment & CI/CD
+  epic-6: in-progress
+  6-1-github-actions-cicd-pipeline-github-pages-deployment: done
+  6-2-vercel-deployment-configuration: backlog
+  epic-6-retrospective: optional

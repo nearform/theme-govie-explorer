@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+import Link from 'next/link';
+
 import { ColorSwatch } from '@/components/ColorSwatch';
 import { FilterInput } from '@/components/FilterInput';
 import tokenData from '@/data/tokens.json';
@@ -55,7 +57,7 @@ function TokenPill({ name }: { name: string }) {
   const tokenParam = name.replace(/^--/, '');
 
   return (
-    <a
+    <Link
       href={`/${route}?token=${tokenParam}`}
       className="group inline-flex items-center gap-1 rounded-md bg-nf-light-grey px-2 py-0.5 text-[11px] font-mono text-nf-deep-navy hover:bg-nf-green/20 motion-safe:transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-nf-green focus-visible:ring-offset-1"
     >
@@ -68,7 +70,7 @@ function TokenPill({ name }: { name: string }) {
         />
       )}
       <span className="truncate max-w-[200px]">{name}</span>
-    </a>
+    </Link>
   );
 }
 
